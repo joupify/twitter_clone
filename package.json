@@ -9,5 +9,8 @@
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "dependencies": {
+    "sass": "^1.84.0"
+  }
 }
