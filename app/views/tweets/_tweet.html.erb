@@ -1,0 +1,7 @@
+<div class="card mb-3">
+  <div class="card-body">
+    <h5 class="card-title"><%= tweet.user.email %></h5>
+    <p class="card-text"><%= tweet.content %></p>
+    <p class="card-text"><small class="text-muted"><%= time_ago_in_words(tweet.created_at) %> ago</small></p>
+  </div>
+</div>
