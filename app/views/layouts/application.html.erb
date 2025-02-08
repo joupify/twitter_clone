@@ -16,6 +16,8 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     
@@ -29,6 +31,14 @@
 
        <p class="notice"><%= notice %></p>
        <p class="alert"><%= alert %></p>
+
+    <% if user_signed_in? %>
+    Hi <%= current_user.email %>
+    <%= button_to "Log Out", destroy_user_session_path, method: :delete  %> 
+
+    <% else %>
+    <%= link_to "Sign in", new_user_session_path %>
+  <% end %>
 
     <%= yield %>
   </body>

@@ -3,7 +3,7 @@ import consumer from "../channels/consumer"
 
 export default class extends Controller {
   connect() {
-    console.log("Stimulus Controller connecté :", this.element);
+    console.log("Tweet Controller connecté :", this.element);
 
     this.subscription = consumer.subscriptions.create("TweetsChannel", {
       received: (data) => {
