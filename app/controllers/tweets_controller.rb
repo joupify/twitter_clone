@@ -8,7 +8,7 @@ class TweetsController < ApplicationController
     @tweet = current_user.tweets.new(tweet_params)
     if @tweet.save
       respond_to do |format|
-        format.html { redirect_to tweets_path, notice: "Tweet publié avec succès." }
+        format.html { redirect_to tweets_path, notice: 'Tweet publié avec succès.' }
         format.turbo_stream do
           render turbo_stream: turbo_stream.prepend('tweets', partial: 'tweets/tweet', locals: { tweet: @tweet })
         end

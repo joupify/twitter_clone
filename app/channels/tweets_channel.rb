@@ -1,6 +1,6 @@
 class TweetsChannel < ApplicationCable::Channel
   def subscribed
-     stream_from "tweets"
+     stream_from 'tweets'
   end
 
   def unsubscribed
