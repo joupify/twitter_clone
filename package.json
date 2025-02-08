@@ -11,6 +11,12 @@
     "defaults"
   ],
   "dependencies": {
+    "autoprefixer": "^10.4.20",
+    "bootstrap": "^5.3.3",
+    "postcss": "^8.5.1",
     "sass": "^1.84.0"
+  },
+  "devDependencies": {
+    "postcss-cli": "^11.0.0"
   }
 }
