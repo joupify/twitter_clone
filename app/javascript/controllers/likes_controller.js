@@ -48,6 +48,7 @@ export default class extends Controller {
       console.error("Like or Unlike button not found in updateLikes!")
     }
   }
+  
   like(event) {
     event.preventDefault()
     fetch(this.likeButtonTarget.form.action, {

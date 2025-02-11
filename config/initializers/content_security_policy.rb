@@ -24,3 +24,8 @@
 #   # config.content_security_policy_report_only = true
 # end
 
+
+# config/initializers/content_security_policy.rb
+Rails.application.config.content_security_policy do |policy|
+  policy.script_src :self, :unsafe_inline, :unsafe_eval
+end

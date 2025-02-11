@@ -29,8 +29,11 @@
 
   <body>
 
-       <p class="notice"><%= notice %></p>
-       <p class="alert"><%= alert %></p>
+
+    <div id="flash" class="flash <%= 'flash-content' if notice || alert  %>">
+      <%= render "shared/flashes" %>
+    </div>
+   
 
     <% if user_signed_in? %>
     Hi <%= current_user.email %>

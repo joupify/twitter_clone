@@ -2,7 +2,8 @@ class Like < ApplicationRecord
   belongs_to :user
   belongs_to :tweet
   has_many :liking_users, through: :likes, source: :user
-  validates :user_id, uniqueness: { scope: :tweet_id }
+  validates :user_id, uniqueness: { scope: :tweet_id } # user ne peut pas liker 2 fois le meme tweet
+  validate :user_cannot_like_own_tweet
 
   after_create_commit { broadcast_like }
   after_destroy_commit { broadcast_like }
@@ -14,12 +15,18 @@ class Like < ApplicationRecord
 
   private
 
+
   def broadcast_like
-    ActionCable.server.broadcast("likes", {
+    ActionCable.server.broadcast('likes', {
       tweet_id: tweet.id,
       likes_count: tweet.likes.count,
       user_liked: user.liked_tweets.include?(tweet),
-      action: persisted? ? "like" : "unlike"
+      action: persisted? ? 'like' : 'unlike'
     })
+  end
+
+
+  def user_cannot_like_own_tweet
+    errors.add(:user, 'Vous ne pouvez pas liker votre propre tweet') if tweet.user == user
   end
 end

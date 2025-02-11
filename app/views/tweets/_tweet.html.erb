@@ -1,3 +1,5 @@
+
+
 <div class="card mb-3" id="tweet_<%= tweet.id %>" data-controller="likes" data-likes-tweet-id-value="<%= tweet.id %>">
   <div class="card-body">
     <h5 class="card-title"><%= tweet.user.email %></h5>
@@ -9,9 +11,12 @@
       <%= button_to unlike_tweet_path(tweet), method: :delete, class: "border-0 badge rounded-pill bg-light text-dark #{@user_liked_tweet_ids&.include?(tweet.id) ? '' : 'd-none'}", data: { action: "click->likes#unlike", likes_target: "unlikeButton" } do %>
         <i class="fas fa-heart text-danger"></i>
       <% end %>
+
+
       <%= button_to like_tweet_path(tweet), method: :post, class: "border-0 badge rounded-pill bg-light text-dark #{@user_liked_tweet_ids&.include?(tweet.id) ? 'd-none' : ''}", data: { action: "click->likes#like", likes_target: "likeButton" } do %>
         <i class="far fa-heart text-dark"></i>
       <% end %>
+
       <span class="likes-count" data-likes-target="likesCount"><%= tweet.likes.count %> likes</span>
     </div>
   </div>
