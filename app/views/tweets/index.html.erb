@@ -1,11 +1,4 @@
-<%= turbo_stream.update "flash" do  %>
-  <%= render "shared/flashes" %>
-<% end %>
 
-<!-- app/views/tweets/index.html.erb -->
-<div id="flash">
-  <%= render "shared/flashes" %>
-</div>
 
 <div class="container">
 <%= render 'form', tweet: @tweet %>
@@ -14,4 +7,4 @@
 <%= render @tweets %>
 </div>
 </div>
-
+>

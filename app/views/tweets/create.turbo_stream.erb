@@ -1,5 +1,7 @@
 <%= turbo_stream.replace "tweet_#{@tweet.id}" do %>
   <%= render partial: "tweets/tweet", locals: { tweet: @tweet } %>
+  <%= turbo_stream.prepend "flash", partial: "layouts/flash" %>
+
 <% end %>
 
 

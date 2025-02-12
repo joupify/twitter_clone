@@ -73,4 +73,3 @@ gem 'font-awesome-sass', '~> 6.1'
 gem 'simple_form', '~> 5.2'
 gem 'autoprefixer-rails'
 
-gem 'turbo_flash', '~> 2.0'

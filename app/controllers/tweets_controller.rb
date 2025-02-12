@@ -9,13 +9,8 @@ class TweetsController < ApplicationController
 
   respond_to do |format|
     format.html # Rend la vue HTML par défaut (index.html.erb)
-    format.turbo_stream do
-      # Vous pouvez ajouter des mises à jour Turbo ici si nécessaire
-      # Par exemple, pour mettre à jour les messages flash :
-      render turbo_stream: [
-        turbo_stream.update('flash', partial: 'shared/flashes', locals: { notice: flash[:notice] })
-      ]
-    end
+    format.turbo_stream # Rend la vue Turbo Stream par défaut (index.turbo_stream.erb)
+    
   end
   end
 
@@ -24,38 +19,38 @@ class TweetsController < ApplicationController
 
     if @tweet.save
       flash.now[:notice] = 'Tweet created!'
-      Turbo::StreamsChannel.broadcast_replace_to(
-        'flash',
-        target: 'flash',
-        partial: 'shared/flashes'
-      )
-      head :ok
+      # Turbo::StreamsChannel.broadcast_replace_to(
+      #   'flash',
+      #   target: 'flash',
+      #   partial: 'layouts/flash'
+      # )
+      # head :ok
     else
-      flash.now[:alert] = @tweet.errors.full_messages.to_sentence
+      flash.now[:notice] = @tweet.errors.full_messages.to_sentence
       render :index, status: :unprocessable_entity
     end
+
   end
 
   def like
     @tweet = Tweet.find(params[:id])
-
     if current_user.liked_tweets.include?(@tweet)
-      flash.now[:notice] = 'You have already liked this tweet.'
+      flash[:notice] = 'You have already liked this tweet.'
     elsif current_user.id == @tweet.user_id
-      flash.now[:notice] = 'You cannot like your own tweet.'
+      flash[:notice] = 'You cannot like your own tweet.'
     else
       current_user.likes.create(tweet: @tweet)
-      flash.now[:notice] = 'Tweet liked!'
+      flash[:notice] = 'Tweet liked!'
     end
-
+  
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
-          turbo_stream.replace('flash', partial: 'shared/flashes', locals: { notice: 'Tweet liked.' }),
+          turbo_stream.replace('flash', partial: 'layouts/flash'),
           turbo_stream.replace("tweet_#{@tweet.id}", partial: 'tweets/tweet', locals: { tweet: @tweet })
         ]
       end
-      format.html { redirect_to tweets_path, notice: 'Tweet liked.' }
+      format.html { redirect_to tweets_path }
     end
   end
 
@@ -74,11 +69,11 @@ class TweetsController < ApplicationController
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
-          turbo_stream.replace('flash', partial: 'shared/flashes', locals: { notice: 'Tweet liked.' }),
+          turbo_stream.replace('flash', partial: 'layouts/flash'),
           turbo_stream.replace("tweet_#{@tweet.id}", partial: 'tweets/tweet', locals: { tweet: @tweet })
         ]
       end
-      format.html { redirect_to tweets_path, notice: 'Tweet liked.' }
+      format.html { redirect_to tweets_path, notice: 'Tweet unliked.' }
     end
   end
 

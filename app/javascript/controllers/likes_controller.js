@@ -50,7 +50,6 @@ export default class extends Controller {
   }
   
   like(event) {
-    event.preventDefault()
     fetch(this.likeButtonTarget.form.action, {
       method: "POST",
       headers: {
@@ -61,7 +60,6 @@ export default class extends Controller {
   }
 
   unlike(event) {
-    event.preventDefault()
     fetch(this.unlikeButtonTarget.form.action, {
       method: "DELETE",
       headers: {

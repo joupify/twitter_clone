@@ -13,9 +13,10 @@
       <% end %>
 
 
-      <%= button_to like_tweet_path(tweet), method: :post, class: "border-0 badge rounded-pill bg-light text-dark #{@user_liked_tweet_ids&.include?(tweet.id) ? 'd-none' : ''}", data: { action: "click->likes#like", likes_target: "likeButton" } do %>
+      <%= button_to like_tweet_path(tweet), method: :post, class: "border-0 badge rounded-pill bg-light text-dark #{@user_liked_tweet_ids&.include?(tweet.id) ? 'd-none' : ''}", data: { action: "click->likes#like", likes_target: "likeButton" }  do %>
         <i class="far fa-heart text-dark"></i>
       <% end %>
+
 
       <span class="likes-count" data-likes-target="likesCount"><%= tweet.likes.count %> likes</span>
     </div>
