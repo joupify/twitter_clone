@@ -1,24 +1,44 @@
-
-
-<div class="card mb-3" id="tweet_<%= tweet.id %>" data-controller="likes" data-likes-tweet-id-value="<%= tweet.id %>">
+<div class="card mb-3 tweet-container retweet-depth-<%= tweet_depth(tweet) %>" id="tweet_<%= tweet.id %>" data-controller="likes" data-likes-tweet-id-value="<%= tweet.id %>">
   <div class="card-body">
     <h5 class="card-title"><%= tweet.user.email %></h5>
     <p class="card-text"><%= tweet.content %></p>
     <p class="card-text">
       <small class="text-muted"><%= time_ago_in_words(tweet.created_at) %> ago</small>
     </p>
-    <div>
-      <%= button_to unlike_tweet_path(tweet), method: :delete, class: "border-0 badge rounded-pill bg-light text-dark #{@user_liked_tweet_ids&.include?(tweet.id) ? '' : 'd-none'}", data: { action: "click->likes#unlike", likes_target: "unlikeButton" } do %>
-        <i class="fas fa-heart text-danger"></i>
+
+    <!-- Actions: Like & Retweet -->
+    <div class="tweet-actions d-flex align-items-center">
+      <!-- Retweet Button -->
+      <%= link_to retweet_tweet_path(tweet), method: :post, data: { turbo_method: :post }, class: "retweet-button mx-2" do %>
+        <i class="fas fa-retweet"></i> 
       <% end %>
 
+      <!-- Likes -->
+      <div class="like-buttons">
+        <div class="d-flex align-items-center">
+          <%= button_to unlike_tweet_path(tweet), method: :delete, class: "border-0 badge rounded-pill bg-light text-dark p-1 m-0 #{@user_liked_tweet_ids&.include?(tweet.id) ? '' : 'd-none'}", data: { action: "click->likes#unlike", likes_target: "unlikeButton" } do %>
+            <i class="fas fa-heart text-danger"></i>
+          <% end %>
 
-      <%= button_to like_tweet_path(tweet), method: :post, class: "border-0 badge rounded-pill bg-light text-dark #{@user_liked_tweet_ids&.include?(tweet.id) ? 'd-none' : ''}", data: { action: "click->likes#like", likes_target: "likeButton" }  do %>
-        <i class="far fa-heart text-dark"></i>
-      <% end %>
 
+          <%= button_to like_tweet_path(tweet), method: :post, class: "border-0 badge rounded-pill bg-light text-dark p-1 m-0 #{@user_liked_tweet_ids&.include?(tweet.id) ? 'd-none' : ''}", data: { action: "click->likes#like", likes_target: "likeButton" }  do %>
+            <i class="far fa-heart text-dark"></i>
+          <% end %>
 
-      <span class="likes-count" data-likes-target="likesCount"><%= tweet.likes.count %> likes</span>
+          <span class="likes-count p-0 m-0 bg-transparent" data-likes-target="likesCount"><%= tweet.likes.count %></span>
+        </div>
+
+      </div>
     </div>
+
+    <!-- Retweets affichés en cascade -->
+    <% if tweet.retweets.any? %>
+      <div class="retweets">
+        <% tweet.retweets.each do |retweet| %>
+          <%= render 'tweets/tweet', tweet: retweet %>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </div>
+``
