@@ -1,0 +1,24 @@
+
+ <!-- app/views/shared/_flashes.html.erb -->
+
+<% if notice %>
+  <div class="alert alert-dismissible fade show flash flash-content m-1"
+       role="alert"
+       data-controller="removals"
+       data-action="animationend->removals#remove"
+       style="background-color: #d5b647;">
+    <%= notice %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>
+
+<% if alert %>
+  <div class="alert alert-warning alert-dismissible fade show flash flash-content m-1"
+       role="alert"
+       data-controller="removals"
+       data-action="animationend->removals#remove">
+    <%= alert %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %> 
+

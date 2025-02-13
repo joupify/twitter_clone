@@ -1,0 +1,13 @@
+<%= turbo_stream.replace "tweet_#{@tweet.id}" do %>
+  <%= render partial: "tweets/tweet", locals: { tweet: @tweet } %>
+<% end %>
+
+
+<%= turbo_stream.replace "flash" do %>
+  <%= render partial: "layouts/flash" %>
+<% end %>
+
+
+
+
+

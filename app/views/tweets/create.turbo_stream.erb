@@ -1,0 +1,10 @@
+!-- app/views/tweets/create.turbo_stream.erb-->
+
+<%= turbo_stream.prepend "tweets" do %>
+  <%= render "tweet", tweet: @tweet %>
+<% end %>
+
+
+<%= turbo_stream.prepend "#{dom_id(@tweet)}_likes" do %>
+  <%= render "tweet", tweet: @tweet %>
+<% end %>

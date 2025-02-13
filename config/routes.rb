@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get 'tweets/index'
-  get 'tweets/create'
   devise_for :users
   resources :tweets, only: [ :index, :create ]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -15,4 +13,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root 'tweets#index'
+
+  resources :tweets do
+    member do
+      post 'like', to: 'tweets#like'
+      delete 'unlike', to: 'tweets#unlike'
+    end
+  end
 end

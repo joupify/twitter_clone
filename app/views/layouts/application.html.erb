@@ -6,7 +6,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+    <%= csp_meta_tag %>   
+    <%= turbo_refreshes_with method: :morph, scroll: :preserve %>
+
+
 
     <%= yield :head %>
 
@@ -16,6 +19,8 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     
@@ -23,12 +28,24 @@
     <%= javascript_importmap_tags %>
     <%= action_cable_meta_tag %>
 
+
   </head>
 
   <body>
 
-       <p class="notice"><%= notice %></p>
-       <p class="alert"><%= alert %></p>
+
+    <div id="flash" class="flash <%= 'flash-content' if notice || alert  %>">
+      <%= render "layouts/flash" %>
+    </div>
+   
+
+    <% if user_signed_in? %>
+    Hi <%= current_user.email %>
+    <%= button_to "Log Out", destroy_user_session_path, method: :delete  %> 
+
+    <% else %>
+    <%= link_to "Sign in", new_user_session_path %>
+  <% end %>
 
     <%= yield %>
   </body>

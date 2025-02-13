@@ -24,17 +24,8 @@
 #   # config.content_security_policy_report_only = true
 # end
 
-Rails.application.config.content_security_policy do |policy|
-  policy.default_src :self, :https
-  policy.font_src    :self, :https, :data
-  policy.img_src     :self, :https, :data
-  policy.object_src  :none
-  policy.script_src  :self, :https, :unsafe_inline
-  policy.style_src   :self, :https, :unsafe_inline
-  policy.connect_src :self, :https, 'ws://localhost:3000', 'ws://127.0.0.1:3000'
 
-  # Si vous utilisez des sources supplémentaires, ajoutez-les ici
-  if Rails.env.development?
-    policy.script_src :self, :https, :unsafe_inline, :unsafe_eval
-  end
+# config/initializers/content_security_policy.rb
+Rails.application.config.content_security_policy do |policy|
+  policy.script_src :self, :unsafe_inline, :unsafe_eval
 end

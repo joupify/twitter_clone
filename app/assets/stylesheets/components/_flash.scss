@@ -1,0 +1,22 @@
+.flash {
+	position: fixed;
+	top: 2rem;
+	left: 10%;
+	transform: translateX(-50%);
+	padding: 16px 24px;
+	max-width: 100%;
+	width: max-content;
+	//  display: none; /* Initially hide the flash container */
+}
+
+.flash-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: white;
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+	border-radius: 4px;
+	margin: 8px;
+	animation: appear-then-fade 2ms both;
+}
+
