@@ -49,23 +49,11 @@ export default class extends Controller {
     }
   }
   
-  like(event) {
-    fetch(this.likeButtonTarget.form.action, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
-        "Accept": "text/vnd.turbo-stream.html"
-      }
-    })
+  like() {
+    
   }
 
-  unlike(event) {
-    fetch(this.unlikeButtonTarget.form.action, {
-      method: "DELETE",
-      headers: {
-        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
-        "Accept": "text/vnd.turbo-stream.html"
-      }
-    })
+  unlike() {
+    
   }
 }
