@@ -21,8 +21,6 @@ Rails.application.routes.draw do
       delete 'unlike', to: 'tweets#unlike'
       post 'retweet', to: 'tweets#retweet'
       post 'increment_views'
-
     end
   end
-
 end

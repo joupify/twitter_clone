@@ -1,7 +1,7 @@
 class Tweet < ApplicationRecord
   belongs_to :user
   has_many :likes, dependent: :destroy
-  belongs_to :parent, class_name: "Tweet", optional: true
+  belongs_to :parent, class_name: 'Tweet', optional: true
   has_many :retweets, class_name: 'Tweet', foreign_key: 'parent_id', dependent: :destroy
   has_many :comments, dependent: :destroy
 
@@ -25,4 +25,3 @@ class Tweet < ApplicationRecord
     self.views_count ||= 0
   end
 end
-
