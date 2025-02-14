@@ -27,11 +27,12 @@
   </head>
 
   <body class="<%= 'dark-mode' if cookies[:dark_mode] == 'true' %>">
-    <header>
-<button data-controller="dark-mode" data-action="click->dark-mode#toggle" class="btn btn-outline-light">
-  🌙 Mode Sombre
-</button>
-    </header>
+
+      <header class="d-flex justify-content-end p-3">
+        <button data-controller="dark-mode" data-action="click->dark-mode#toggle" class="btn btn-outline-light">
+          🌙 Mode Sombre
+        </button>
+      </header>
 
   
     <div id="flash" class="flash <%= 'flash-content' if notice || alert  %>">
