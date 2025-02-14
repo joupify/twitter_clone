@@ -5,6 +5,9 @@ class TweetsController < ApplicationController
     @tweets = Tweet.all.includes(:user, :likes).order(created_at: :desc)
     @tweet = Tweet.new
     @user_liked_tweet_ids = current_user&.liked_tweets&.pluck(:id) || []
+    # @comment = @tweet.comments.new
+    # @comment.user = current_user
+
 
 
   respond_to do |format|
@@ -12,6 +15,16 @@ class TweetsController < ApplicationController
     format.turbo_stream # Rend la vue Turbo Stream par défaut (index.turbo_stream.erb)
   end
   end
+
+
+  def show
+    @tweet = Tweet.find_by(id: params[:id]) # Utilisez `find_by` pour éviter une exception si le tweet n'existe pas
+
+    if @tweet.nil?
+      redirect_to tweets_path, alert: "Tweet non trouvé"
+    end
+  end
+
 
   def create
     @tweet = current_user.tweets.new(tweet_params)

@@ -15,10 +15,12 @@ Rails.application.routes.draw do
   root 'tweets#index'
 
   resources :tweets do
+    resources :comments, only: [ :index, :new, :create, :destroy ]
     member do
       post 'like', to: 'tweets#like'
       delete 'unlike', to: 'tweets#unlike'
       post 'retweet', to: 'tweets#retweet'
     end
   end
+
 end
