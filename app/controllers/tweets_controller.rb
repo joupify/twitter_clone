@@ -1,15 +1,13 @@
 class TweetsController < ApplicationController
   before_action :authenticate_user!
-
+  before_action :set_tweet
   def index
-    @tweets = Tweet.all.includes(:user, :likes).order(created_at: :desc)
+
+  @tweets = Tweet.where(parent_id: nil).includes(:user, :likes).order(created_at: :desc)
     @tweet = Tweet.new
     @user_liked_tweet_ids = current_user&.liked_tweets&.pluck(:id) || []
-    # @comment = @tweet.comments.new
-    # @comment.user = current_user
-
-
-
+    # @user_commented_tweet_ids = current_user&.commented_tweets&.pluck(:id) || []
+   
   respond_to do |format|
     format.html # Rend la vue HTML par défaut (index.html.erb)
     format.turbo_stream # Rend la vue Turbo Stream par défaut (index.turbo_stream.erb)
@@ -19,6 +17,7 @@ class TweetsController < ApplicationController
 
   def show
     @tweet = Tweet.find_by(id: params[:id]) # Utilisez `find_by` pour éviter une exception si le tweet n'existe pas
+    # increment_views  # Incrémente aussi les vues ici
 
     if @tweet.nil?
       redirect_to tweets_path, alert: "Tweet non trouvé"
@@ -102,14 +101,21 @@ class TweetsController < ApplicationController
     end
   end
   
-
+  def increment_views
+    @tweet = Tweet.find(params[:id])
+    @tweet.increment!(:views_count) # Ajoute +1 à chaque affichage
+    head :ok # Renvoie une réponse vide avec un statut 200 (OK)
+  end
 
   private
 
-
-
+  def set_tweet
+    @tweet = Tweet.find_by(id: params[:id])
+  end
 
   def tweet_params
     params.require(:tweet).permit(:content)
   end
+
+  
 end

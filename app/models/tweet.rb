@@ -12,9 +12,17 @@ class Tweet < ApplicationRecord
 
   after_create_commit { broadcast_prepend_to 'tweets' }
 
+  after_initialize :set_defaults
+
+
 
   def retweets?(user)
     retweets.exists?(user_id: user.id)
+  end
+
+  private
+  def set_defaults
+    self.views_count ||= 0
   end
 end
 
