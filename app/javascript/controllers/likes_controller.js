@@ -31,7 +31,7 @@ export default class extends Controller {
     console.log("Data received:", data)
   
     if (this.hasLikesCountTarget) {
-      this.likesCountTarget.textContent = `${data.likes_count} likes`
+      this.likesCountTarget.textContent = `${data.likes_count}`
     }
   
     if (this.hasLikeButtonTarget && this.hasUnlikeButtonTarget) {

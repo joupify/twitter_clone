@@ -15,7 +15,7 @@ class CommentsController < ApplicationController
     @comment = @tweet.comments.build(comment_params)
     @comment.user = current_user
     if @comment.save
-      flash[:notice] = "Comment was successfully created."
+      flash[:notice] = 'Comment was successfully created.'
       redirect_to tweet_path(@tweet) # Ajoutez une redirection après la création
     else
       flash[:alert] = @comment.errors.full_messages.to_sentence
