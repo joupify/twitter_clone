@@ -47,7 +47,6 @@
       </div>
       
       <!-- Favorites -->
-
      <div class="d-flex align-items-center">
       <% if current_user.favorited?(tweet) %>
         <%= button_to unfavorite_tweet_path(tweet), method: :delete, class: "background-transparent" do %>
@@ -62,9 +61,9 @@
 
       <!-- Share Button -->
       <div class="d-flex align-items-center">
-        <%= link_to "#", class: "mx-2" do %>
-        <i class="fas fa-share-alt text-secondary"></i> <!-- Icône de partage avec un carré -->
-        <% end %>
+       <a href="#" class="mx-2" data-bs-toggle="modal" data-bs-target="#shareModal" data-tweet-id="<%= tweet.id %>">
+          <i class="fas fa-share-alt"></i> <!-- Share Icon -->
+        </a>
       </div>
 
     </div>
@@ -83,3 +82,47 @@
   <% end %>
 
 </div>
+
+<!-- Modal for sharing -->
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="shareModalLabel">Share Tweet</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Options for sharing -->
+        <ul class="list-unstyled">
+          <li><a href="https://twitter.com/intent/tweet?url=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
+          <li><a href="https://www.facebook.com/sharer/sharer.php?u=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
+          <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+          <li><a href="https://api.whatsapp.com/send?text=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+          <li><a href="mailto:?subject=Check%20out%20this%20tweet&body=<%= tweet_url(tweet) %>" target="_blank"><i class="fas fa-envelope"></i> Email</a></li>
+          <li><a href="#" id="copyLink" data-tweet-id="<%= tweet.id %>"><i class="fas fa-link"></i> Copy Tweet Link</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const copyLinkButton = document.getElementById('copyLink');
+  
+  if (copyLinkButton) {
+    copyLinkButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      
+      const tweetId = event.target.dataset.tweetId;
+      const tweetUrl = `${window.location.origin}/tweets/${tweetId}`;
+      
+      navigator.clipboard.writeText(tweetUrl).then(function() {
+        alert('Tweet link copied to clipboard!');
+      }).catch(function(err) {
+        alert('Failed to copy text: ' + err);
+      });
+    });
+  }
+});
+</script>
