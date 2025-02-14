@@ -1,0 +1,26 @@
+<!-- app/views/comments/new.html.erb -->
+<h1>Nouveau commentaire pour le Tweet #<%= @tweet.id %></h1>
+
+<%= form_with(model: [@tweet, @comment], local: true) do |form| %>
+  <% if @comment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@comment.errors.count, "erreur") %> ont empêché ce commentaire d'être enregistré :</h2>
+      <ul>
+        <% @comment.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :content, "Votre commentaire" %>
+    <%= form.text_area :content, required: true %>
+  </div>
+
+  <div>
+    <%= form.submit "Créer le commentaire" %>
+  </div>
+<% end %>
+
+<%= link_to 'Retour au tweet', tweet_path(@tweet) %>

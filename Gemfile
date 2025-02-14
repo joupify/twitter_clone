@@ -72,3 +72,5 @@ gem 'bootstrap', '~> 5.3.0'
 gem 'font-awesome-sass', '~> 6.1'
 gem 'simple_form', '~> 5.2'
 gem 'autoprefixer-rails'
+
+gem "bullet", "~> 8.0"

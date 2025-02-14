@@ -1,0 +1,38 @@
+<!-- app/views/tweets/show.html.erb -->
+<div class="container mt-4">
+  <% if @tweet %>
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h1 class="card-title"><%= @tweet.content %></h1>
+
+        <h2 class="mt-4">Commentaires</h2>
+        <ul class="list-group mb-4">
+          <% @tweet.comments.each do |comment| %>
+            <li class="list-group-item">
+              <strong><%= comment.user.email %> :</strong>
+              <span><%= comment.content %></span>
+            </li>
+          <% end %>
+        </ul>
+
+        <!-- Formulaire pour ajouter un commentaire -->
+        <div class="card p-3 bg-light">
+          <h5>Ajouter un commentaire</h5>
+          <%= form_with(model: [@tweet, @tweet.comments.build], local: true, class: "mt-3") do |form| %>
+            <div class="mb-3">
+              <%= form.label :content, "Votre commentaire", class: "form-label" %>
+              <%= form.text_area :content, required: true, class: "form-control", rows: 3 %>
+            </div>
+            <%= form.submit "Poster", class: "btn btn-primary" %>
+          <% end %>
+        </div>
+
+        <div class="mt-3">
+          <%= link_to 'Voir tous les commentaires', tweet_comments_path(@tweet), class: "btn btn-secondary" %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <p class="alert alert-danger">Le tweet n'a pas été trouvé.</p>
+  <% end %>
+</div>
