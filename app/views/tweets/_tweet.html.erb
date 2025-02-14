@@ -45,18 +45,25 @@
           <span class="views-count text-secondary"><%= tweet.views_count %></span>
           </div>
       </div>
+      
+      <!-- Favorites -->
 
-      <!-- Save to Favorites Button -->
-      <div class="d-flex align-items-center">
-        <%= link_to "#", class: "mx-2" do %>
+     <div class="d-flex align-items-center">
+      <% if current_user.favorited?(tweet) %>
+        <%= button_to unfavorite_tweet_path(tweet), method: :delete, class: "background-transparent" do %>
           <i class="fas fa-bookmark text-secondary"></i> <!-- Save Icon -->
         <% end %>
-      </div>
+      <% else %>
+        <%= button_to favorite_tweet_path(tweet), method: :post, class: "background-transparent" do %>
+          <i class="far fa-bookmark text-secondary"></i> <!-- Save Icon -->
+        <% end %>
+      <% end %>
+    </div>
 
       <!-- Share Button -->
       <div class="d-flex align-items-center">
         <%= link_to "#", class: "mx-2" do %>
-      <i class="fas fa-share-alt text-secondary"></i> <!-- Icône de partage avec un carré -->
+        <i class="fas fa-share-alt text-secondary"></i> <!-- Icône de partage avec un carré -->
         <% end %>
       </div>
 

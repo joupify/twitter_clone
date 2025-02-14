@@ -106,6 +106,46 @@ class TweetsController < ApplicationController
     head :ok # Renvoie une réponse vide avec un statut 200 (OK)
   end
 
+def favorite
+  @tweet = Tweet.find(params[:id])
+  if current_user.favorited_tweets.include?(@tweet)
+    flash[:notice] = 'You have already favorited this tweet.'
+  else
+    current_user.favorites.create(tweet: @tweet)
+    flash[:notice] = 'Tweet favorited!'   
+  end
+  respond_to do |format|
+    format.turbo_stream do
+      render turbo_stream: [
+        turbo_stream.replace('flash', partial: 'layouts/flash'),
+        turbo_stream.replace("tweet_#{params[:id]}", partial: 'tweets/tweet', locals: { tweet: @tweet })
+      ]
+    end
+    format.html { redirect_to tweets_path }
+  end
+end
+
+def unfavorite
+  @tweet = Tweet.find(params[:id])
+  favorite = current_user.favorites.find_by(tweet: @tweet)
+  if favorite
+    favorite.destroy
+    flash[:notice] = 'Tweet unfavorited!'
+  else
+    flash[:alert] = 'Tweet already unfavorited!'
+  end
+  respond_to do |format|
+    format.turbo_stream do
+      render turbo_stream: [
+        turbo_stream.replace('flash', partial: 'layouts/flash'),
+        turbo_stream.replace("tweet_#{params[:id]}", partial: 'tweets/tweet', locals: { tweet: @tweet })
+      ]
+    end
+    format.html { redirect_to tweets_path }
+  end
+end
+
+
   private
 
   def set_tweet
