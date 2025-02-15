@@ -24,7 +24,7 @@ class Tweet < ApplicationRecord
   end
 
   private
-  
+
   def set_defaults
     self.views_count ||= 0
   end

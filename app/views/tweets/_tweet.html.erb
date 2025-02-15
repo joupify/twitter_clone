@@ -93,36 +93,23 @@
       </div>
       <div class="modal-body">
         <!-- Options for sharing -->
-        <ul class="list-unstyled">
-          <li><a href="https://twitter.com/intent/tweet?url=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
-          <li><a href="https://www.facebook.com/sharer/sharer.php?u=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
-          <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
-          <li><a href="https://api.whatsapp.com/send?text=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
-          <li><a href="mailto:?subject=Check%20out%20this%20tweet&body=<%= tweet_url(tweet) %>" target="_blank"><i class="fas fa-envelope"></i> Email</a></li>
-          <li><a href="#" id="copyLink" data-tweet-id="<%= tweet.id %>"><i class="fas fa-link"></i> Copy Tweet Link</a></li>
+        <ul class="list d-flex  gap-2">
+          <li><a href="https://twitter.com/intent/tweet?url=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-twitter text-primary"></i> Twitter</a></li>
+          <li><a href="https://www.facebook.com/sharer/sharer.php?u=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-facebook text-primary"></i> Facebook</a></li>
+          <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-linkedin text-primary"></i> LinkedIn</a></li>
+          <li><a href="https://api.whatsapp.com/send?text=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-whatsapp text-success"></i> WhatsApp</a></li>
+          <li><a href="mailto:?subject=Check%20out%20this%20tweet&body=<%= tweet_url(tweet) %>" target="_blank"><i class="fas fa-envelope text-danger"></i> Email</a></li>
+        <li>
+          <a href="#" 
+            data-controller="copy-link" 
+            data-copy-link-url-value="<%= tweet_url(tweet) %>" 
+            data-action="click->copy-link#copy">
+            <span data-copy_link-target="icon"><i class="fas fa-link"></i> Copy Tweet Link</span>
+          </a>
+        </li>
         </ul>
       </div>
     </div>
   </div>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const copyLinkButton = document.getElementById('copyLink');
-  
-  if (copyLinkButton) {
-    copyLinkButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      
-      const tweetId = event.target.dataset.tweetId;
-      const tweetUrl = `${window.location.origin}/tweets/${tweetId}`;
-      
-      navigator.clipboard.writeText(tweetUrl).then(function() {
-        alert('Tweet link copied to clipboard!');
-      }).catch(function(err) {
-        alert('Failed to copy text: ' + err);
-      });
-    });
-  }
-});
-</script>

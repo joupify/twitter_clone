@@ -15,7 +15,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  
+
 
     def favorited?(tweet)
     favorited_tweets.include?(tweet)

@@ -112,7 +112,7 @@ def favorite
     flash[:notice] = 'You have already favorited this tweet.'
   else
     current_user.favorites.create(tweet: @tweet)
-    flash[:notice] = 'Tweet favorited!'   
+    flash[:notice] = 'Tweet favorited!'
   end
   respond_to do |format|
     format.turbo_stream do
