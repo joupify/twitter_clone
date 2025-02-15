@@ -23,16 +23,16 @@
 	<% if @user == current_user && @liked_tweets.any? %>
 				<h4>Vous avez liké ces tweets</h3>
 			<% @liked_tweets.each do |t| %>
-				<%= t.content %>
+<p><%= t.content %> <span>&nbsp;</span> @<%= t.user.name %></p>
 			<% end %>
 		<% end %>
 
 
 		<% if @user == current_user && @commented_tweets.any? %>
 				<h4>Vous avez commenté ces tweets</h4>
-			<% @commented_tweets.each do |t| %>
-				<%= t.content %>		
-		<% end %>
+			<% @commented_tweets.each do |t| %> 
+<p><%= t.content %> <span>&nbsp;</span> @<%= t.user.name %></p>
+			<% end %>
 		<% end %>
 
 	</div>
