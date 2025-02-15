@@ -9,6 +9,11 @@ class User < ApplicationRecord
   has_many :favorites, dependent: :destroy
   has_many :favorited_tweets, through: :favorites, source: :tweet
 
+  has_one_attached :avatar
+
+  validates :name, presence: true
+  validates :avatar, presence: true
+
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -19,5 +24,5 @@ class User < ApplicationRecord
 
     def favorited?(tweet)
     favorited_tweets.include?(tweet)
-  end
+    end
 end

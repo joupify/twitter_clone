@@ -20,6 +20,10 @@ module Twitter
     #
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
+
+    # config active storage to user mini_magick instead of vips
+    config.active_storage.variant_processor = :mini_magick
+
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")

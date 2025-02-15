@@ -1,0 +1,24 @@
+<div class="container py-5">
+
+<h2>Modifier votre profil</h2>
+
+<%= form_for current_user, url: user_path(current_user), method: :patch do |f| %>
+  <div class="field">
+    <%= f.label :username %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :bio %>
+    <%= f.text_area :bio, class: "form-control" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :avatar %>
+    <%= f.file_field :avatar, class: "form-control" %>
+  </div>
+
+  <%= f.submit "Enregistrer", class: "btn btn-success" %>
+<% end %>
+
+</div>

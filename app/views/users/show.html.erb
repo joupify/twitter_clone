@@ -1,0 +1,41 @@
+<div class= "container py-5">
+<div class="card">
+	<div class="card-body">
+<%= image_tag @user.avatar.variant(resize: "200x200").processed if @user.avatar.attached? %>
+		<h1 class="card-title"><%= @user.name %></h1>
+		<p class="card-text">Email: <%= @user.email %></p>
+
+		<% if @user.bio.present? %>
+			<p class="card-text">Bio: <%= @user.bio %></p>
+		<% end %>
+
+
+		<% if @user == current_user %>
+			<%= link_to 'Edit', edit_user_path(@user), class: 'btn btn-primary mb-3' %>	
+		<% end %>
+
+		<h3>MesTweets</h3>
+			<div class="mt-3">	
+			<%= render @tweets %>
+			</div>
+
+
+	<% if @user == current_user && @liked_tweets.any? %>
+				<h4>Vous avez liké ces tweets</h3>
+			<% @liked_tweets.each do |t| %>
+				<%= t.content %>
+			<% end %>
+		<% end %>
+
+
+		<% if @user == current_user && @commented_tweets.any? %>
+				<h4>Vous avez commenté ces tweets</h4>
+			<% @commented_tweets.each do |t| %>
+				<%= t.content %>		
+		<% end %>
+		<% end %>
+
+	</div>
+</div>
+
+</div>
