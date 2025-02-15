@@ -5,6 +5,9 @@ class Tweet < ApplicationRecord
   has_many :retweets, class_name: 'Tweet', foreign_key: 'parent_id', dependent: :destroy
   has_many :comments, dependent: :destroy
 
+  has_many :favorites, dependent: :destroy
+  has_many :favorited_by_users, through: :favorites, source: :tweet
+
   scope :originals, -> { where(parent_id: nil) } # Pour filtrer les tweets non retweetés
 
 
@@ -21,6 +24,7 @@ class Tweet < ApplicationRecord
   end
 
   private
+
   def set_defaults
     self.views_count ||= 0
   end

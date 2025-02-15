@@ -45,19 +45,25 @@
           <span class="views-count text-secondary"><%= tweet.views_count %></span>
           </div>
       </div>
-
-      <!-- Save to Favorites Button -->
-      <div class="d-flex align-items-center">
-        <%= link_to "#", class: "mx-2" do %>
+      
+      <!-- Favorites -->
+     <div class="d-flex align-items-center">
+      <% if current_user.favorited?(tweet) %>
+        <%= button_to unfavorite_tweet_path(tweet), method: :delete, class: "background-transparent" do %>
           <i class="fas fa-bookmark text-secondary"></i> <!-- Save Icon -->
         <% end %>
-      </div>
+      <% else %>
+        <%= button_to favorite_tweet_path(tweet), method: :post, class: "background-transparent" do %>
+          <i class="far fa-bookmark text-secondary"></i> <!-- Save Icon -->
+        <% end %>
+      <% end %>
+    </div>
 
       <!-- Share Button -->
       <div class="d-flex align-items-center">
-        <%= link_to "#", class: "mx-2" do %>
-      <i class="fas fa-share-alt text-secondary"></i> <!-- Icône de partage avec un carré -->
-        <% end %>
+       <a href="#" class="mx-2" data-bs-toggle="modal" data-bs-target="#shareModal" data-tweet-id="<%= tweet.id %>">
+          <i class="fas fa-share-alt"></i> <!-- Share Icon -->
+        </a>
       </div>
 
     </div>
@@ -76,3 +82,34 @@
   <% end %>
 
 </div>
+
+<!-- Modal for sharing -->
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="shareModalLabel">Share Tweet</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Options for sharing -->
+        <ul class="list d-flex  gap-2">
+          <li><a href="https://twitter.com/intent/tweet?url=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-twitter text-primary"></i> Twitter</a></li>
+          <li><a href="https://www.facebook.com/sharer/sharer.php?u=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-facebook text-primary"></i> Facebook</a></li>
+          <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-linkedin text-primary"></i> LinkedIn</a></li>
+          <li><a href="https://api.whatsapp.com/send?text=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-whatsapp text-success"></i> WhatsApp</a></li>
+          <li><a href="mailto:?subject=Check%20out%20this%20tweet&body=<%= tweet_url(tweet) %>" target="_blank"><i class="fas fa-envelope text-danger"></i> Email</a></li>
+        <li>
+          <a href="#" 
+            data-controller="copy-link" 
+            data-copy-link-url-value="<%= tweet_url(tweet) %>" 
+            data-action="click->copy-link#copy">
+            <span data-copy_link-target="icon"><i class="fas fa-link"></i> Copy Tweet Link</span>
+          </a>
+        </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
