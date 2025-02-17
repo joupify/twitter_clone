@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :users, only: [:show, :edit, :update] # Profil utilisateur
+
+
+  resources :users, only: [:show, :edit, :update] do # Profil utilisateur
+    member do
+      post 'follow'
+      delete 'unfollow'
+    end
+  end 
 
   resources :tweets, only: [ :index, :create ]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -27,4 +34,6 @@ Rails.application.routes.draw do
       delete 'unfavorite', to: 'tweets#unfavorite'
     end
   end
+
+ 
 end
