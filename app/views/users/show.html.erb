@@ -1,0 +1,74 @@
+<div class= "container py-5">
+<div class="card">
+	<div class="card-body">
+<%= image_tag @user.avatar.variant(resize: "200x200").processed if @user.avatar.attached? %>
+		<h1 class="card-title"><%= @user.name %></h1>
+		<p class="card-text">Email: <%= @user.email %></p>
+
+		<div class="banner">
+			<%= image_tag @user.banner.variant(resize: "800x200").processed if @user.banner.attached?	%> 
+		</div>
+
+		<div class="bio">
+		 <% if @user.bio.present? %>		
+				<p class="card-text">Bio: <%= @user.bio %></p>
+			<% end %>
+		</div>
+
+
+		<% if @user == current_user %>
+			<%= link_to 'Edit', edit_user_path(@user), class: 'btn btn-primary mb-3' %>	
+		<% end %>
+
+		<h3>MesTweets</h3>
+			<div class="list mt-3">	
+			<%= render @tweets %>
+			</div>
+
+
+		<% if @user == current_user && @liked_tweets.any? %>
+				<h4>Vous avez liké ces tweets</h3>
+			<% @liked_tweets.each do |t| %>
+				<p><%= t.content %> <span>&nbsp;</span> <%= link_to "@#{t.user.name}", user_path(t.user), class: "text-decoration-none" %></p>
+			<% end %>
+		<% end %>
+
+
+		<% if @user == current_user && @commented_tweets.any? %>
+				<h4>Vous avez commenté ces tweets</h4>
+			<% @commented_tweets.each do |t| %> 
+			<p><%= t.content %> <span>&nbsp;</span> <%= link_to "@#{t.user.name}", user_path(t.user), class: "text-decoration-none" %></p>
+			<% end %>
+		<% end %>
+
+	</div>
+			<h3>Abonnements</h3>
+		<div id="follow_button_<%= @user.id %>">
+  		<%= render "users/follow_button", user: @user %>
+		</div>
+
+
+
+		<h3>Followers</h3>
+		<% if @followers.any? %>
+			<% @followers.each do |f| %>
+				<p><%= link_to "@#{f.name}", user_path(f), class: "text-decoration-none" %></p>
+			<% end %>
+		<% else %>
+			<p>Aucun follower</p>
+		<% end %>
+
+		<h3>Followings</h3>
+		<% if @followings.any? %>
+			<% @followings.each do |f| %>
+				<p><%= link_to "@#{f.name}", user_path(f), class: "text-decoration-none" %></p>
+			<% end %>
+		<% else %>
+			<p>Vous ne suivez personne</p>
+		<% end %>
+
+
+
+</div>
+
+</div>

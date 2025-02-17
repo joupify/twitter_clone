@@ -72,4 +72,8 @@ Rails.application.configure do
 
   # devise
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  # Active Stoarge
+  config.active_storage.service = :local
+  config.active_storage.url_options = { host: 'http://localhost:3000' }
 end
