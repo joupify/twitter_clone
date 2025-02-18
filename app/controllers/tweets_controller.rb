@@ -29,6 +29,7 @@ class TweetsController < ApplicationController
 
     if @tweet.save
       flash.now[:notice] = 'Tweet created!'
+
     else
       flash.now[:notice] = @tweet.errors.full_messages.to_sentence
       render :index, status: :unprocessable_entity

@@ -42,8 +42,8 @@ gem 'kamal', require: false
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem 'thruster', require: false
 
-# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
- gem "image_processing", "~> 1.2"
+ # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
+ gem 'image_processing', '~> 1.2'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -59,6 +59,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
+  gem 'letter_opener'
 end
 
 group :test do
@@ -74,3 +75,9 @@ gem 'simple_form', '~> 5.2'
 gem 'autoprefixer-rails'
 
 gem 'bullet', '~> 8.0'
+
+gem 'noticed', '~> 2.6'
+
+gem 'sidekiq', '~> 7.3'
+
+gem 'annotaterb'

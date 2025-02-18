@@ -48,8 +48,8 @@
       
       <!-- Favorites -->
      <div class="d-flex align-items-center">
-      <% if current_user.favorited?(tweet) %>
-        <%= button_to unfavorite_tweet_path(tweet), method: :delete, class: "background-transparent" do %>
+      <% if @user&.favorited?(tweet) %>
+        <%= button_to unfavorite_tweet_path(tweet), method: :delete, class: "background-transparent " do %>
           <i class="fas fa-bookmark text-secondary"></i> <!-- Save Icon -->
         <% end %>
       <% else %>

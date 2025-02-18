@@ -1,8 +1,12 @@
 # == Schema Information
 #
-# Table name: likes
+# Table name: events
 #
 #  id         :bigint           not null, primary key
+#  event_type :string
+#  metadata   :json
+#  status     :integer
+#  string     :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  tweet_id   :bigint           not null
@@ -10,9 +14,8 @@
 #
 # Indexes
 #
-#  index_likes_on_tweet_id              (tweet_id)
-#  index_likes_on_user_id               (user_id)
-#  index_likes_on_user_id_and_tweet_id  (user_id,tweet_id) UNIQUE
+#  index_events_on_tweet_id  (tweet_id)
+#  index_events_on_user_id   (user_id)
 #
 # Foreign Keys
 #
@@ -21,7 +24,7 @@
 #
 require 'test_helper'
 
-class LikeTest < ActiveSupport::TestCase
+class EventTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

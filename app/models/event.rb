@@ -1,0 +1,44 @@
+# == Schema Information
+#
+# Table name: events
+#
+#  id         :bigint           not null, primary key
+#  event_type :string
+#  metadata   :json
+#  status     :integer
+#  string     :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  tweet_id   :bigint           not null
+#  user_id    :bigint           not null
+#
+# Indexes
+#
+#  index_events_on_tweet_id  (tweet_id)
+#  index_events_on_user_id   (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (tweet_id => tweets.id)
+#  fk_rails_...  (user_id => users.id)
+#
+class Event < ApplicationRecord
+  belongs_to :user
+  belongs_to :tweet, optional: true  # Optional si l'événement ne concerne pas toujours un tweet
+
+validates :status, presence: true
+validates :event_type, presence: true
+enum :status, { pending: 0, completed: 1, failed: 2 }
+
+
+
+  # Méthode pour marquer l'événement comme terminé
+  def mark_as_completed
+    update(status: 1)
+  end
+
+  # Méthode pour marquer l'événement comme échoué
+  def mark_as_failed
+    update(status: 2)
+  end
+end
