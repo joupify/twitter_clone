@@ -13,7 +13,7 @@
 #  updated_at :datetime         not null
 #  comment_id :bigint
 #  like_id    :bigint
-#  tweet_id   :bigint           not null
+#  tweet_id   :bigint
 #  user_id    :bigint           not null
 #
 # Indexes

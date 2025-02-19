@@ -18,6 +18,9 @@ class EventJob < ApplicationJob
       when 'comment'
         comment_notification_event(event)
         puts 'Un tweet a été commenté !'
+      when 'new_follower'
+        follower_notification_event(event)
+        puts 'New abonné !'
       else
         puts 'Événement inconnu.'
       end
@@ -63,4 +66,23 @@ class EventJob < ApplicationJob
 
       CommentNotifier.with(tweet: tweet, user: user, comment: comment).deliver_later(user)
   end
+
+
+ 
+  def follower_notification_event(event)
+    follower_id = event.metadata['follower_id']
+    followed_id = event.metadata['followed_id']
+  
+    follower = User.find_by(id: follower_id)
+    followed = User.find_by(id: followed_id)
+  
+    if follower && followed
+      FollowerNotifier.with(follower: follower, followed: followed).deliver_later(followed)
+    else
+      Rails.logger.error("User not found for follower_id: #{follower_id} or followed_id: #{followed_id}")
+    end
+  end
+  
+
+
 end

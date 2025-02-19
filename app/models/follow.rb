@@ -27,10 +27,18 @@ belongs_to :followed, class_name: 'User', foreign_key: 'followed_id'
 validates :follower_id, uniqueness: { scope: :followed_id }
 validate :cannot_follow_self
 
+after_create :notify_followed_user
+
 
 private
 
-def cannot_follow_self
-  errors.add(:follower, 'Vous ne pouvez pas vous suivre vous-même') if follower == followed
-end
+  def cannot_follow_self
+    errors.add(:follower, 'Vous ne pouvez pas vous suivre vous-même') if follower == followed
+  end
+
+
+  def notify_followed_user
+    FollowerNotifier.with(follower: follower, followed: followed).deliver_later(followed)
+  end
+
 end

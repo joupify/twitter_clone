@@ -113,6 +113,21 @@ class User < ApplicationRecord
       # Lancer le job pour traiter l'événement
       EventJob.perform_later(event)
   end
+
+  def notify_new_follower(followed)
+    event = Event.create!(
+      user: self,  # L'utilisateur qui est suivi
+      event_type: 'new_follower',
+      status: :pending,
+      metadata: { follower_id: self.id, followed_id: followed.id }
+      )
+  
+    EventJob.perform_later(event)
+  end
+
+
+
+
 end
 
 
