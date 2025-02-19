@@ -24,4 +24,16 @@ class Comment < ApplicationRecord
   belongs_to :user
 
   validates :content, presence: true
+
+  after_create :notify_tweet_owner
+
+  private
+  
+  def notify_tweet_owner
+    CommentNotifier.with(tweet: tweet, user: user, comment: comment).deliver_later(user)
+  end
+  
+  
+
+
 end

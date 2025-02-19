@@ -26,6 +26,9 @@ class Like < ApplicationRecord
   validates :user_id, uniqueness: { scope: :tweet_id } # user ne peut pas liker 2 fois le meme tweet
   validate :user_cannot_like_own_tweet
 
+  after_create :notify_tweet_owner
+
+
   after_create_commit { broadcast_like }
   after_destroy_commit { broadcast_like }
 
@@ -50,4 +53,11 @@ class Like < ApplicationRecord
   def user_cannot_like_own_tweet
     errors.add(:user, 'Vous ne pouvez pas liker votre propre tweet') if tweet.user == user
   end
+
+   def notify_tweet_owner
+    LikeNotifier.with(tweet: tweet, user: user, like: like).deliver_later(user)
+   end
+    
+
+
 end

@@ -38,12 +38,23 @@ class Tweet < ApplicationRecord
   after_initialize :set_defaults
 
 
+  after_create :notify_tweet_owner
+
+
+
 
   def retweets?(user)
     retweets.exists?(user_id: user.id)
   end
 
   private
+
+  def notify_tweet_owner
+    TweetNotifier
+    .with(tweet: tweet, user: user, emails: emails)
+    .deliver_later(user.followers)
+  end
+
 
   def set_defaults
     self.views_count ||= 0
