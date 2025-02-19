@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                     :bigint           not null, primary key
+#  banner                 :string
+#  bio                    :text
+#  email                  :string           default(""), not null
+#  encrypted_password     :string           default(""), not null
+#  name                   :string
+#  remember_created_at    :datetime
+#  reset_password_sent_at :datetime
+#  reset_password_token   :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#
+# Indexes
+#
+#  index_users_on_email                 (email) UNIQUE
+#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#
 class User < ApplicationRecord
   has_many :tweets, dependent: :destroy
   has_many :likes, dependent: :destroy
@@ -5,11 +26,11 @@ class User < ApplicationRecord
   has_many :retweets, class_name: 'Tweet', dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :commented_tweets, through: :comments, source: :tweet
-  has_many :notifications, class_name: 'Noticed::Notification', as: :recipient, dependent: :destroy
-
 
   has_many :favorites, dependent: :destroy
   has_many :favorited_tweets, through: :favorites, source: :tweet
+  has_many :notifications, class_name: 'Noticed::Notification', as: :recipient, dependent: :destroy
+
 
   has_one_attached :avatar
   has_one_attached :banner
@@ -31,14 +52,14 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-    def following?(user)
-      followings.include?(user)
-    end
+  def following?(user)
+    followings.include?(user)
+  end
 
 
-    def favorited?(tweet)
-    favorited_tweets.include?(tweet)
-    end
+  def favorited?(tweet)
+  favorited_tweets.include?(tweet)
+  end
 
   def unread_notifications
     notifications.where(read_at: nil)
@@ -67,25 +88,23 @@ class User < ApplicationRecord
   end
 
 
-  # def notify_followers(tweet)
-  #   # Récupérer les emails des followers
-  #   emails = follower_emails
-  #   if emails.any?
-  #     emails.each do |email|
-  #       user = User.find_by(email: email)
-  #       if user
-  #         # Enqueue le job pour chaque follower, pour l'événement 'tweet'
-  #         JobEventJob.perform_later('tweet', user, tweet)
-  #       end
-  #     end
-  #   end
-  # end
 
-  # def notify_followers(tweet)
-  #   # Envoyer une notification par e-mail à tous les followers
-  #   emails = follower_emails
-  #   if follower_emails.any?
-  #   TweetNotifier.with(tweet: tweet, user: self, emails: emails).deliver_later(followers)
-  #   end
-  # end
+  def notify_user(like)
+    tweet = like.tweet  # Récupère le tweet associé au like
+
+   
+      # Créer un événement pour enregistrer cette action
+      event = Event.create!(
+        user: self,
+        tweet: tweet,
+        like: like,
+        event_type: 'like',
+        status: :pending,
+      )
+
+      # Lancer le job pour traiter l'événement
+      EventJob.perform_later(event)
+    end
 end
+
+
