@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: tweets
+#
+#  id          :bigint           not null, primary key
+#  content     :text
+#  views_count :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  parent_id   :integer
+#  user_id     :bigint           not null
+#
+# Indexes
+#
+#  index_tweets_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
+#
 class Tweet < ApplicationRecord
   belongs_to :user
   has_many :likes, dependent: :destroy
@@ -18,12 +38,23 @@ class Tweet < ApplicationRecord
   after_initialize :set_defaults
 
 
+  after_create :notify_tweet_owner
+
+
+
 
   def retweets?(user)
     retweets.exists?(user_id: user.id)
   end
 
   private
+
+  def notify_tweet_owner
+    TweetNotifier
+    .with(tweet: tweet, user: user, emails: emails)
+    .deliver_later(user.followers)
+  end
+
 
   def set_defaults
     self.views_count ||= 0

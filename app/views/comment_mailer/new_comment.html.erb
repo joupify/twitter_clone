@@ -1,0 +1,12 @@
+<h1>Comment#new_comment</h1>
+<p>Salut <%= @tweet.user.name %>,</p>
+
+<p><%= @user.name %> vient de commenter votre  tweet :</p>
+
+<blockquote>
+  <%= @tweet.content %>
+</blockquote>
+
+<p>Voir le tweet : <%= link_to "Clique ici", tweet_url(@tweet) %></p>
+
+<p>À bientôt sur notre plateforme !</p>

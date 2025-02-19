@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_16_000243) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_19_210921) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -52,6 +52,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_16_000243) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "events", force: :cascade do |t|
+    t.string "event_type"
+    t.string "string"
+    t.bigint "user_id", null: false
+    t.bigint "tweet_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "status"
+    t.json "metadata"
+    t.bigint "like_id"
+    t.bigint "comment_id"
+    t.index ["comment_id"], name: "index_events_on_comment_id"
+    t.index ["like_id"], name: "index_events_on_like_id"
+    t.index ["tweet_id"], name: "index_events_on_tweet_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
+  end
+
   create_table "favorites", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "tweet_id", null: false
@@ -79,6 +96,30 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_16_000243) do
     t.index ["tweet_id"], name: "index_likes_on_tweet_id"
     t.index ["user_id", "tweet_id"], name: "index_likes_on_user_id_and_tweet_id", unique: true
     t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "noticed_events", force: :cascade do |t|
+    t.string "type"
+    t.string "record_type"
+    t.bigint "record_id"
+    t.jsonb "params"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "notifications_count"
+    t.index ["record_type", "record_id"], name: "index_noticed_events_on_record"
+  end
+
+  create_table "noticed_notifications", force: :cascade do |t|
+    t.string "type"
+    t.bigint "event_id", null: false
+    t.string "recipient_type", null: false
+    t.bigint "recipient_id", null: false
+    t.datetime "read_at", precision: nil
+    t.datetime "seen_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_noticed_notifications_on_event_id"
+    t.index ["recipient_type", "recipient_id"], name: "index_noticed_notifications_on_recipient"
   end
 
   create_table "tweets", force: :cascade do |t|
@@ -110,6 +151,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_16_000243) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "tweets"
   add_foreign_key "comments", "users"
+  add_foreign_key "events", "comments"
+  add_foreign_key "events", "likes"
+  add_foreign_key "events", "tweets"
+  add_foreign_key "events", "users"
   add_foreign_key "favorites", "tweets"
   add_foreign_key "favorites", "users"
   add_foreign_key "follows", "users", column: "followed_id"

@@ -1,0 +1,11 @@
+<p>Salut <%= @user.name %>,</p>
+
+<p><%= @tweet.user.name %> vient de publier un nouveau tweet :</p>
+
+<blockquote>
+  <%= @tweet.content %>
+</blockquote>
+
+<p>Voir le tweet : <%= link_to "Clique ici", tweet_url(@tweet) %></p>
+
+<p>À bientôt sur notre plateforme !</p>

@@ -76,4 +76,8 @@ Rails.application.configure do
   # Active Stoarge
   config.active_storage.service = :local
   config.active_storage.url_options = { host: 'http://localhost:3000' }
+
+  # letter_opener
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
 end

@@ -1,0 +1,10 @@
+<h1>New Abonné</h1>
+<p>Salut <%= @followed.name %>,</p>
+
+<p><%= @follower.name %> vous suit :</p>
+
+
+
+<p>Voir le profil : <%= link_to "Clique ici", user_url(@follower) %></p>
+
+<p>À bientôt sur notre plateforme !</p>
