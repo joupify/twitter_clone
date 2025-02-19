@@ -9,18 +9,21 @@
 #  string     :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  comment_id :bigint
 #  like_id    :bigint
 #  tweet_id   :bigint           not null
 #  user_id    :bigint           not null
 #
 # Indexes
 #
-#  index_events_on_like_id   (like_id)
-#  index_events_on_tweet_id  (tweet_id)
-#  index_events_on_user_id   (user_id)
+#  index_events_on_comment_id  (comment_id)
+#  index_events_on_like_id     (like_id)
+#  index_events_on_tweet_id    (tweet_id)
+#  index_events_on_user_id     (user_id)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (comment_id => comments.id)
 #  fk_rails_...  (like_id => likes.id)
 #  fk_rails_...  (tweet_id => tweets.id)
 #  fk_rails_...  (user_id => users.id)
@@ -29,6 +32,8 @@ class Event < ApplicationRecord
   belongs_to :user
   belongs_to :tweet, optional: true  # Optional si l'événement ne concerne pas toujours un tweet
   belongs_to :like, optional: :true
+  belongs_to :comment, optional: :true
+
   
 
 validates :status, presence: true

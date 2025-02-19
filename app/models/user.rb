@@ -89,22 +89,30 @@ class User < ApplicationRecord
 
 
 
-  def notify_user(like)
-    tweet = like.tweet  # Récupère le tweet associé au like
+  def notify_user(action, object)
+    tweet = case action
+            when :like
+              object.tweet
+            when :comment
+              object.tweet
+            else
+              object
+            end
 
-   
+      # tweet = like.tweet  # Récupère le tweet associé au like
       # Créer un événement pour enregistrer cette action
       event = Event.create!(
         user: self,
         tweet: tweet,
-        like: like,
-        event_type: 'like',
+        like: action == :like ? object : nil,
+        comment: action == :comment ? object : nil,
+        event_type: action.to_s,
         status: :pending,
       )
 
       # Lancer le job pour traiter l'événement
       EventJob.perform_later(event)
-    end
+  end
 end
 
 

@@ -15,6 +15,9 @@ class EventJob < ApplicationJob
       when 'like'
         like_notification_event(event)
         puts 'Un tweet a été liké !'
+      when 'comment'
+        comment_notification_event(event)
+        puts 'Un tweet a été commenté !'
       else
         puts 'Événement inconnu.'
       end
@@ -51,5 +54,13 @@ class EventJob < ApplicationJob
     like = event.like
 
       LikeNotifier.with(tweet: tweet, user: user, like: like).deliver_later(user)
+  end
+
+  def comment_notification_event(event)
+    user = event.user
+    tweet = event.tweet
+    comment = event.comment
+
+      CommentNotifier.with(tweet: tweet, user: user, comment: comment).deliver_later(user)
   end
 end

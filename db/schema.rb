@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_19_145639) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_19_151524) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,6 +62,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_145639) do
     t.integer "status"
     t.json "metadata"
     t.bigint "like_id"
+    t.bigint "comment_id"
+    t.index ["comment_id"], name: "index_events_on_comment_id"
     t.index ["like_id"], name: "index_events_on_like_id"
     t.index ["tweet_id"], name: "index_events_on_tweet_id"
     t.index ["user_id"], name: "index_events_on_user_id"
@@ -149,6 +151,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_145639) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "tweets"
   add_foreign_key "comments", "users"
+  add_foreign_key "events", "comments"
   add_foreign_key "events", "likes"
   add_foreign_key "events", "tweets"
   add_foreign_key "events", "users"
