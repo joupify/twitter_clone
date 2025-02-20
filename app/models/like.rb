@@ -20,8 +20,8 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class Like < ApplicationRecord
-  belongs_to :user
-  belongs_to :tweet
+  belongs_to :user, counter_cache: :likes_count
+  belongs_to :tweet, counter_cache: :likes_count
   has_many :liking_users, through: :likes, source: :user
   validates :user_id, uniqueness: { scope: :tweet_id } # user ne peut pas liker 2 fois le meme tweet
   validate :user_cannot_like_own_tweet

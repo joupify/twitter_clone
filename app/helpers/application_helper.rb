@@ -4,4 +4,5 @@ module ApplicationHelper
 
       tweet_depth(Tweet.find(tweet.parent_id), depth + 1)
     end
+
 end

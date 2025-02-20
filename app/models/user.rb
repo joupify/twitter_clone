@@ -5,12 +5,16 @@
 #  id                     :bigint           not null, primary key
 #  banner                 :string
 #  bio                    :text
+#  comments_count         :integer
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
+#  likes_count            :integer
 #  name                   :string
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
+#  tweets_count           :integer
+#  username               :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
@@ -18,8 +22,10 @@
 #
 #  index_users_on_email                 (email) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#  index_users_on_username              (username) UNIQUE
 #
 class User < ApplicationRecord
+
   has_many :tweets, dependent: :destroy
   has_many :likes, dependent: :destroy
   has_many :liked_tweets, through: :likes, source: :tweet
@@ -36,7 +42,7 @@ class User < ApplicationRecord
   has_one_attached :banner
 
   validates :name, presence: true
-  validates :avatar, presence: true
+  # validates :avatar, presence: true
 
   # Un utilisateur peut suivre plusieurs autres utilisateurs (Followings)
   has_many :active_follows, class_name: 'Follow', foreign_key: 'follower_id', dependent: :destroy
@@ -51,7 +57,13 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+         before_save :set_default_username
 
+         validates :username, presence: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9_]+\z/, message: "ne peut contenir que des lettres, chiffres et underscores" }
+
+         after_create :update_counters
+
+        
   def following?(user)
     followings.include?(user)
   end
@@ -127,6 +139,31 @@ class User < ApplicationRecord
 
 
 
+  private
+
+  def set_default_username
+    if username.blank? && name.present?
+      Rails.logger.debug "🚀 set_default_username est appelée pour #{name}"
+  
+      base_username = name.parameterize.underscore
+      unique_username = base_username
+      counter = 1
+  
+      while User.exists?(username: unique_username)
+        counter += 1
+        unique_username = "#{base_username}_#{counter}"
+      end
+  
+      self.username = unique_username
+      Rails.logger.debug "✅ Username généré : #{self.username}"
+    end
+  end
+
+
+  def update_counters
+    update(likes_count: likes.count, comments_count: comments.count, tweets_count: tweets.count)
+  end
+  
 
 end
 

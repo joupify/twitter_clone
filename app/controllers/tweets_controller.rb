@@ -2,7 +2,7 @@ class TweetsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_tweet
   def index
-  @tweets = Tweet.where(parent_id: nil).includes(:user, :likes).order(created_at: :desc)
+  @tweets = Tweet.where(parent_id: nil).includes(:user, :retweets).order(created_at: :desc)
     @tweet = Tweet.new
     @user_liked_tweet_ids = current_user&.liked_tweets&.pluck(:id) || []
   # @user_commented_tweet_ids = current_user&.commented_tweets&.pluck(:id) || []

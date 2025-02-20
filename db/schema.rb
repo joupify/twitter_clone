@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_19_210921) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_20_221158) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -98,6 +98,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_210921) do
     t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
+  create_table "mentions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "tweet_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tweet_id"], name: "index_mentions_on_tweet_id"
+    t.index ["user_id"], name: "index_mentions_on_user_id"
+  end
+
   create_table "noticed_events", force: :cascade do |t|
     t.string "type"
     t.string "record_type"
@@ -129,6 +138,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_210921) do
     t.datetime "updated_at", null: false
     t.integer "parent_id"
     t.integer "views_count"
+    t.integer "retweets_count", default: 0, null: false
+    t.integer "likes_count", default: 0, null: false
+    t.integer "comments_count", default: 0, null: false
+    t.integer "favorites_count", default: 0, null: false
     t.index ["user_id"], name: "index_tweets_on_user_id"
   end
 
@@ -143,8 +156,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_210921) do
     t.datetime "updated_at", null: false
     t.text "bio"
     t.string "banner"
+    t.string "username"
+    t.integer "likes_count"
+    t.integer "comments_count"
+    t.integer "tweets_count"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -161,5 +179,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_210921) do
   add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "likes", "tweets"
   add_foreign_key "likes", "users"
+  add_foreign_key "mentions", "tweets"
+  add_foreign_key "mentions", "users"
   add_foreign_key "tweets", "users"
 end
