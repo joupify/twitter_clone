@@ -68,10 +68,40 @@ class User < ApplicationRecord
     followings.include?(user)
   end
 
+  # app/models/user.rb
+def follower_ids
+  @follower_ids ||= follows.pluck(:follower_id)
+end
 
-  def favorited?(tweet)
-  favorited_tweets.include?(tweet)
-  end
+def followed_by?(user)
+  follower_ids.include?(user.id)
+end
+
+def liked_tweet_ids
+  @liked_tweet_ids ||= likes.pluck(:tweet_id)
+end
+
+def liked?(tweet)
+  liked_tweet_ids.include?(tweet.id)
+end
+
+def commented_tweet_ids
+  @commented_tweet_ids ||= comments.pluck(:tweet_id)
+end
+
+def commented?(tweet)
+  commented_tweet_ids.include?(tweet.id)
+end
+
+def favorited_tweet_ids
+  @favorited_tweet_ids ||= favorites.pluck(:tweet_id)
+end
+
+def favorited?(tweet)
+  favorited_tweet_ids.include?(tweet.id)
+end
+
+
 
   def unread_notifications
     notifications.where(read_at: nil)
