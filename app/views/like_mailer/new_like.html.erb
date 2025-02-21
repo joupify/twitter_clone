@@ -6,6 +6,9 @@
   <%= @tweet.content %>
 </blockquote>
 
-<p>Voir le tweet : <%= link_to "Clique ici", tweet_url(@tweet) %></p>
+
+<p>
+  👉 <a href="<%= tweet_url(params[:tweet]) %>">Voir le tweet</a>
+</p>
 
 <p>À bientôt sur notre plateforme !</p>
