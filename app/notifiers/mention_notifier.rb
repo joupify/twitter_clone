@@ -6,8 +6,8 @@ class MentionNotifier < ApplicationNotifier
   # Add your delivery methods
   #
   deliver_by :email do |config|
-    config.mailer = "MentionMailer"
-    config.method = "new_mention"
+    config.mailer = 'MentionMailer'
+    config.method = 'new_mention'
   end
   #
   # bulk_deliver_by :slack do |config|

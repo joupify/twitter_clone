@@ -87,4 +87,3 @@ gem 'annotaterb'
 gem 'roo'       # Pour lire les fichiers Excel
 gem 'gruff'     # Pour générer les graphiques
 gem 'descriptive_statistics'
-

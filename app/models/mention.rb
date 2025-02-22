@@ -26,9 +26,8 @@ class Mention < ApplicationRecord
   # after_create :notify_user_mentioned
 
   private
-  
+
   def notify_user_mentioned
     MentionNotifier.with(tweet: self.tweet, mention: self, user: self.user).deliver_later(self.user)
   end
-  
 end

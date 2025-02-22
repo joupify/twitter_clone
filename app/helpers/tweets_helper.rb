@@ -38,7 +38,7 @@ module TweetsHelper
 
         # Génère le chemin vers le profil de l'utilisateur
         # `rescue "#"` permet de fournir une URL par défaut en cas d'erreur
-        path = Rails.application.routes.url_helpers.user_path(user_id) rescue "#"
+        path = Rails.application.routes.url_helpers.user_path(user_id) rescue '#'
 
         # Remplace la mention par un lien HTML
         "<a href='#{path}' class='mention'>#{match}</a>"

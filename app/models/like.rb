@@ -57,7 +57,4 @@ class Like < ApplicationRecord
    def notify_tweet_owner
     tweet.user.notify_user(:like, self)
    end
-    
-
-
 end

@@ -78,5 +78,4 @@ class Tweet < ApplicationRecord
     end
   end
   end
-
 end

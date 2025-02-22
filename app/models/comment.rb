@@ -28,12 +28,8 @@ class Comment < ApplicationRecord
   after_create :notify_tweet_owner
 
   private
-  
+
   def notify_tweet_owner
     tweet.user.notify_user(:comment, self)
   end
-  
-  
-
-
 end

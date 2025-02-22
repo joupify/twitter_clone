@@ -57,8 +57,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  validates :username, presence: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9_]+\z/, message: "ne peut contenir que des lettres, chiffres et underscores" }
-  
+  validates :username, presence: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9_]+\z/, message: 'ne peut contenir que des lettres, chiffres et underscores' }
+
   before_save :set_default_username
   after_create :update_counters
 
@@ -128,13 +128,13 @@ class User < ApplicationRecord
 
   def notify_user(action, object)
     tweet = case action
-            when :like
+    when :like
               object.tweet
-            when :comment
+    when :comment
               object.tweet
-            else
+    else
               object
-            end
+    end
 
       # tweet = like.tweet  # Récupère le tweet associé au like
       # Créer un événement pour enregistrer cette action
@@ -158,14 +158,14 @@ class User < ApplicationRecord
       status: :pending,
       metadata: { follower_id: self.id, followed_id: followed.id }
       )
-  
+
     EventJob.perform_later(event)
   end
 
   def notify_new_mention(tweet, mention)
     # Vérifie que le tweet et l'utilisateur existent bien
     return unless tweet && self && mention
-  
+
     begin
       event = Event.create!(
         user: self,  # L'utilisateur qui est mentionné
@@ -174,7 +174,7 @@ class User < ApplicationRecord
         metadata: { mentioned_user_id: self.id, tweet_id: tweet.id, mention_id: mention.id, author_id: tweet.user.id }
       )
       Rails.logger.info("Événement créé avec succès : #{event.id}")
-  
+
       EventJob.perform_later(event) # Lance la tâche en arrière-plan
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error("Erreur lors de la création de l'événement : #{e.message}")
@@ -187,16 +187,16 @@ class User < ApplicationRecord
   def set_default_username
     if username.blank? && name.present?
       Rails.logger.debug "🚀 set_default_username est appelée pour #{name}"
-  
+
       base_username = name.parameterize.underscore
       unique_username = base_username
       counter = 1
-  
+
       while User.exists?(username: unique_username)
         counter += 1
         unique_username = "#{base_username}_#{counter}"
       end
-  
+
       self.username = unique_username
       Rails.logger.debug "✅ Username généré : #{self.username}"
     end

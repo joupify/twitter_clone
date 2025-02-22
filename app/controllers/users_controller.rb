@@ -4,8 +4,8 @@ class UsersController < ApplicationController
 
   def show
     @user = User.includes(
-      :commented_tweets, 
-      :followers, 
+      :commented_tweets,
+      :followers,
       :followings
     ).find(params[:id])
 

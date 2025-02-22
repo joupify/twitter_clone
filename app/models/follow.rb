@@ -40,6 +40,4 @@ private
   def notify_followed
     followed.notify_new_follower(follower)
   end
-
 end
-

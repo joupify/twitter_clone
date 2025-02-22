@@ -18,7 +18,7 @@
 #  fk_rails_...  (tweet_id => tweets.id)
 #  fk_rails_...  (user_id => users.id)
 #
-require "test_helper"
+require 'test_helper'
 
 class MentionTest < ActiveSupport::TestCase
   # test "the truth" do

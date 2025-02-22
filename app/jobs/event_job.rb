@@ -71,14 +71,14 @@ class EventJob < ApplicationJob
   end
 
 
- 
+
   def follower_notification_event(event)
     follower_id = event.metadata['follower_id']
     followed_id = event.metadata['followed_id']
-  
+
     follower = User.find_by(id: follower_id)
     followed = User.find_by(id: followed_id)
-  
+
     if follower && followed
       FollowerNotifier.with(follower: follower, followed: followed).deliver_later(followed)
     else
@@ -88,22 +88,16 @@ class EventJob < ApplicationJob
 
   def mention_notification_event(event)
     user = event.user  # L'utilisateur mentionné
-    tweet_id = event.metadata["tweet_id"]
+    tweet_id = event.metadata['tweet_id']
     tweet = Tweet.find(tweet_id) # Utilisez l'ID du tweet des métadonnées
-    
-    mention_id = event.metadata["mention_id"]
+
+    mention_id = event.metadata['mention_id']
     mention = Mention.find(mention_id) # Utilisez l'ID de la mention
-    
+
     return unless user && tweet && mention  # Évite les erreurs si l'un des objets est nil
-    
+
     MentionNotifier.with(tweet: tweet, user: user, mention: mention).deliver_later(user)
-    
+
     puts "#{user.name}, vous avez été mentionné dans un tweet !"
   end
-  
-  
-
-  
-
-
 end
