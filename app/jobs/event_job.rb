@@ -21,6 +21,9 @@ class EventJob < ApplicationJob
       when 'new_follower'
         follower_notification_event(event)
         puts 'New abonné !'
+      when 'new_mention'
+        mention_notification_event(event)
+        puts 'qq vous a mentionné !'
       else
         puts 'Événement inconnu.'
       end
@@ -82,6 +85,24 @@ class EventJob < ApplicationJob
       Rails.logger.error("User not found for follower_id: #{follower_id} or followed_id: #{followed_id}")
     end
   end
+
+  def mention_notification_event(event)
+    user = event.user  # L'utilisateur mentionné
+    tweet_id = event.metadata["tweet_id"]
+    tweet = Tweet.find(tweet_id) # Utilisez l'ID du tweet des métadonnées
+    
+    mention_id = event.metadata["mention_id"]
+    mention = Mention.find(mention_id) # Utilisez l'ID de la mention
+    
+    return unless user && tweet && mention  # Évite les erreurs si l'un des objets est nil
+    
+    MentionNotifier.with(tweet: tweet, user: user, mention: mention).deliver_later(user)
+    
+    puts "#{user.name}, vous avez été mentionné dans un tweet !"
+  end
+  
+  
+
   
 
 

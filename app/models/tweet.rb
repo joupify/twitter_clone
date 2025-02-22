@@ -40,18 +40,10 @@ class Tweet < ApplicationRecord
   validates :content, presence: true, length: { maximum: 280 }
 
   after_create_commit { broadcast_prepend_to 'tweets' }
-
   after_initialize :set_defaults
 
   has_many :mentions, dependent: :destroy
-
   after_save :extract_mentions
-
-
-
-  # after_create :notify_tweet_owner
-
-
 
 
   def retweets?(user)
@@ -60,10 +52,12 @@ class Tweet < ApplicationRecord
 
   private
 
-  def notify_tweet_owner
-    TweetNotifier
-    .with(tweet: tweet, user: user, emails: emails)
-    .deliver_later(user.followers)
+
+  # Notifier les followers d'un nouveau tweet
+  def notify_user_followers
+    user.followers.each do |follower|
+      follower.notify_user(:tweet, self)
+    end
   end
 
 
@@ -71,7 +65,7 @@ class Tweet < ApplicationRecord
     self.views_count ||= 0
   end
 
- def extract_mentions
+  def extract_mentions
   # Recherche tous les @username dans le texte du tweet
   mentioned_usernames = self.content.scan(/@(\w+)/).flatten
 
@@ -79,11 +73,10 @@ class Tweet < ApplicationRecord
     user = User.find_by(username: username)
     if user && !mentions.exists?(user: user)  # Vérifier si la mention existe déjà
       mentions.create(user: user)
+      mention = mentions.create(user: user) # Crée la mention et la stocke dans une variable
+      user.notify_new_mention(self, mention) # Passe le tweet ET la mention à la méthode
     end
   end
-end
-
-# Utilisation d'un seul callback après validation du tweet
-
+  end
 
 end

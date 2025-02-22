@@ -27,7 +27,7 @@ belongs_to :followed, class_name: 'User', foreign_key: 'followed_id'
 validates :follower_id, uniqueness: { scope: :followed_id }
 validate :cannot_follow_self
 
-after_create :notify_followed_user
+after_create :notify_followed
 
 
 private
@@ -37,8 +37,9 @@ private
   end
 
 
-  def notify_followed_user
-    FollowerNotifier.with(follower: follower, followed: followed).deliver_later(followed)
+  def notify_followed
+    followed.notify_new_follower(follower)
   end
 
 end
+

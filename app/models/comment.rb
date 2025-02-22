@@ -30,7 +30,7 @@ class Comment < ApplicationRecord
   private
   
   def notify_tweet_owner
-    CommentNotifier.with(tweet: tweet, user: user, comment: comment).deliver_later(user)
+    tweet.user.notify_user(:comment, self)
   end
   
   

@@ -55,7 +55,7 @@ class Like < ApplicationRecord
   end
 
    def notify_tweet_owner
-    LikeNotifier.with(tweet: tweet, user: user, like: like).deliver_later(user)
+    tweet.user.notify_user(:like, self)
    end
     
 

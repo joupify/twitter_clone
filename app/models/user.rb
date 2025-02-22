@@ -25,7 +25,6 @@
 #  index_users_on_username              (username) UNIQUE
 #
 class User < ApplicationRecord
-
   has_many :tweets, dependent: :destroy
   has_many :likes, dependent: :destroy
   has_many :liked_tweets, through: :likes, source: :tweet
@@ -57,51 +56,48 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-         before_save :set_default_username
 
-         validates :username, presence: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9_]+\z/, message: "ne peut contenir que des lettres, chiffres et underscores" }
+  validates :username, presence: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9_]+\z/, message: "ne peut contenir que des lettres, chiffres et underscores" }
+  
+  before_save :set_default_username
+  after_create :update_counters
 
-         after_create :update_counters
-
-        
   def following?(user)
     followings.include?(user)
   end
 
   # app/models/user.rb
-def follower_ids
-  @follower_ids ||= follows.pluck(:follower_id)
-end
+  def follower_ids
+    @follower_ids ||= follows.pluck(:follower_id)
+  end
 
-def followed_by?(user)
-  follower_ids.include?(user.id)
-end
+  def followed_by?(user)
+    follower_ids.include?(user.id)
+  end
 
-def liked_tweet_ids
-  @liked_tweet_ids ||= likes.pluck(:tweet_id)
-end
+  def liked_tweet_ids
+    @liked_tweet_ids ||= likes.pluck(:tweet_id)
+  end
 
-def liked?(tweet)
-  liked_tweet_ids.include?(tweet.id)
-end
+  def liked?(tweet)
+    liked_tweet_ids.include?(tweet.id)
+  end
 
-def commented_tweet_ids
-  @commented_tweet_ids ||= comments.pluck(:tweet_id)
-end
+  def commented_tweet_ids
+    @commented_tweet_ids ||= comments.pluck(:tweet_id)
+  end
 
-def commented?(tweet)
-  commented_tweet_ids.include?(tweet.id)
-end
+  def commented?(tweet)
+    commented_tweet_ids.include?(tweet.id)
+  end
 
-def favorited_tweet_ids
-  @favorited_tweet_ids ||= favorites.pluck(:tweet_id)
-end
+  def favorited_tweet_ids
+    @favorited_tweet_ids ||= favorites.pluck(:tweet_id)
+  end
 
-def favorited?(tweet)
-  favorited_tweet_ids.include?(tweet.id)
-end
-
-
+  def favorited?(tweet)
+    favorited_tweet_ids.include?(tweet.id)
+  end
 
   def unread_notifications
     notifications.where(read_at: nil)
@@ -112,6 +108,7 @@ end
     followers.pluck(:email)
   end
 
+  # Notifier les followers d'un nouveau tweet
   def notify_followers(tweet)
     emails = follower_emails
     if emails.any?
@@ -128,8 +125,6 @@ end
       EventJob.perform_later(event)
     end
   end
-
-
 
   def notify_user(action, object)
     tweet = case action
@@ -158,7 +153,7 @@ end
 
   def notify_new_follower(followed)
     event = Event.create!(
-      user: self,  # L'utilisateur qui est suivi
+      user: followed,  # L'utilisateur qui est suivi
       event_type: 'new_follower',
       status: :pending,
       metadata: { follower_id: self.id, followed_id: followed.id }
@@ -167,6 +162,24 @@ end
     EventJob.perform_later(event)
   end
 
+  def notify_new_mention(tweet, mention)
+    # Vérifie que le tweet et l'utilisateur existent bien
+    return unless tweet && self && mention
+  
+    begin
+      event = Event.create!(
+        user: self,  # L'utilisateur qui est mentionné
+        event_type: 'new_mention',
+        status: :pending,
+        metadata: { mentioned_user_id: self.id, tweet_id: tweet.id, mention_id: mention.id, author_id: tweet.user.id }
+      )
+      Rails.logger.info("Événement créé avec succès : #{event.id}")
+  
+      EventJob.perform_later(event) # Lance la tâche en arrière-plan
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error("Erreur lors de la création de l'événement : #{e.message}")
+    end
+  end
 
 
   private
@@ -193,8 +206,4 @@ end
   def update_counters
     update(likes_count: likes.count, comments_count: comments.count, tweets_count: tweets.count)
   end
-  
-
 end
-
-
