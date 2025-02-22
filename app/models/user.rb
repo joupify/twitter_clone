@@ -5,12 +5,16 @@
 #  id                     :bigint           not null, primary key
 #  banner                 :string
 #  bio                    :text
+#  comments_count         :integer
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
+#  likes_count            :integer
 #  name                   :string
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
+#  tweets_count           :integer
+#  username               :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
@@ -18,6 +22,7 @@
 #
 #  index_users_on_email                 (email) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#  index_users_on_username              (username) UNIQUE
 #
 class User < ApplicationRecord
   has_many :tweets, dependent: :destroy
@@ -36,7 +41,7 @@ class User < ApplicationRecord
   has_one_attached :banner
 
   validates :name, presence: true
-  validates :avatar, presence: true
+  # validates :avatar, presence: true
 
   # Un utilisateur peut suivre plusieurs autres utilisateurs (Followings)
   has_many :active_follows, class_name: 'Follow', foreign_key: 'follower_id', dependent: :destroy
@@ -52,13 +57,46 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  validates :username, presence: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9_]+\z/, message: 'ne peut contenir que des lettres, chiffres et underscores' }
+
+  before_save :set_default_username
+  after_create :update_counters
+
   def following?(user)
     followings.include?(user)
   end
 
+  # app/models/user.rb
+  def follower_ids
+    @follower_ids ||= follows.pluck(:follower_id)
+  end
+
+  def followed_by?(user)
+    follower_ids.include?(user.id)
+  end
+
+  def liked_tweet_ids
+    @liked_tweet_ids ||= likes.pluck(:tweet_id)
+  end
+
+  def liked?(tweet)
+    liked_tweet_ids.include?(tweet.id)
+  end
+
+  def commented_tweet_ids
+    @commented_tweet_ids ||= comments.pluck(:tweet_id)
+  end
+
+  def commented?(tweet)
+    commented_tweet_ids.include?(tweet.id)
+  end
+
+  def favorited_tweet_ids
+    @favorited_tweet_ids ||= favorites.pluck(:tweet_id)
+  end
 
   def favorited?(tweet)
-  favorited_tweets.include?(tweet)
+    favorited_tweet_ids.include?(tweet.id)
   end
 
   def unread_notifications
@@ -70,6 +108,7 @@ class User < ApplicationRecord
     followers.pluck(:email)
   end
 
+  # Notifier les followers d'un nouveau tweet
   def notify_followers(tweet)
     emails = follower_emails
     if emails.any?
@@ -87,17 +126,15 @@ class User < ApplicationRecord
     end
   end
 
-
-
   def notify_user(action, object)
     tweet = case action
-            when :like
+    when :like
               object.tweet
-            when :comment
+    when :comment
               object.tweet
-            else
+    else
               object
-            end
+    end
 
       # tweet = like.tweet  # Récupère le tweet associé au like
       # Créer un événement pour enregistrer cette action
@@ -116,18 +153,57 @@ class User < ApplicationRecord
 
   def notify_new_follower(followed)
     event = Event.create!(
-      user: self,  # L'utilisateur qui est suivi
+      user: followed,  # L'utilisateur qui est suivi
       event_type: 'new_follower',
       status: :pending,
       metadata: { follower_id: self.id, followed_id: followed.id }
       )
-  
+
     EventJob.perform_later(event)
   end
 
+  def notify_new_mention(tweet, mention)
+    # Vérifie que le tweet et l'utilisateur existent bien
+    return unless tweet && self && mention
+
+    begin
+      event = Event.create!(
+        user: self,  # L'utilisateur qui est mentionné
+        event_type: 'new_mention',
+        status: :pending,
+        metadata: { mentioned_user_id: self.id, tweet_id: tweet.id, mention_id: mention.id, author_id: tweet.user.id }
+      )
+      Rails.logger.info("Événement créé avec succès : #{event.id}")
+
+      EventJob.perform_later(event) # Lance la tâche en arrière-plan
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error("Erreur lors de la création de l'événement : #{e.message}")
+    end
+  end
 
 
+  private
 
+  def set_default_username
+    if username.blank? && name.present?
+      Rails.logger.debug "🚀 set_default_username est appelée pour #{name}"
+
+      base_username = name.parameterize.underscore
+      unique_username = base_username
+      counter = 1
+
+      while User.exists?(username: unique_username)
+        counter += 1
+        unique_username = "#{base_username}_#{counter}"
+      end
+
+      self.username = unique_username
+      Rails.logger.debug "✅ Username généré : #{self.username}"
+    end
+  end
+
+
+  def update_counters
+    update(likes_count: likes.count, comments_count: comments.count, tweets_count: tweets.count)
+  end
 end
-
-

@@ -81,3 +81,9 @@ gem 'noticed', '~> 2.6'
 gem 'sidekiq', '~> 7.3'
 
 gem 'annotaterb'
+
+
+# pour lire les fichiers excel
+gem 'roo'       # Pour lire les fichiers Excel
+gem 'gruff'     # Pour générer les graphiques
+gem 'descriptive_statistics'

@@ -1,6 +1,6 @@
 class FollowerMailer < ApplicationMailer
   def new_follower
-    @greeting = "Hi"
+    @greeting = 'Hi'
     @follower = params[:follower]  # L'utilisateur qui a suivi
     @followed = params[:followed]  # L'utilisateur qui est suivi
 

@@ -34,7 +34,7 @@ class Event < ApplicationRecord
   belongs_to :like, optional: :true
   belongs_to :comment, optional: :true
 
-  
+
 
 validates :status, presence: true
 validates :event_type, presence: true

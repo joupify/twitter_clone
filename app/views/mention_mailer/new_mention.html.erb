@@ -1,0 +1,11 @@
+<p>Bonjour <%= params[:mention].user.username %>,</p>
+
+<p><%= params[:user].username %> vous a mentionné dans un tweet :</p>
+
+<blockquote>
+  <%= params[:tweet].content %>
+</blockquote>
+
+<p>
+  👉 <a href="<%= tweet_url(params[:tweet]) %>">Voir le tweet</a>
+</p>

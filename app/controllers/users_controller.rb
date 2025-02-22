@@ -3,9 +3,16 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
 
   def show
-    @tweets = @user.tweets.order(created_at: :desc)
+    @user = User.includes(
+      :commented_tweets,
+      :followers,
+      :followings
+    ).find(params[:id])
+
+    @tweets = @user.tweets.includes(:retweets).order(created_at: :desc)
     @liked_tweets = @user.liked_tweets
     @commented_tweets = @user.commented_tweets
+    @favorited_tweets = @user.favorited_tweets
     @followers = @user.followers
     @followings = @user.followings
   end
@@ -49,6 +56,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :bio, :avatar)
+    params.require(:user).permit(:name, :username, :bio, :avatar)
   end
 end

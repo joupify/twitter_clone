@@ -20,20 +20,16 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class Comment < ApplicationRecord
-  belongs_to :tweet
-  belongs_to :user
+  belongs_to :tweet, counter_cache: :comments_count
+  belongs_to :user, counter_cache: :comments_count
 
   validates :content, presence: true
 
   after_create :notify_tweet_owner
 
   private
-  
+
   def notify_tweet_owner
-    CommentNotifier.with(tweet: tweet, user: user, comment: comment).deliver_later(user)
+    tweet.user.notify_user(:comment, self)
   end
-  
-  
-
-
 end
