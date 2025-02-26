@@ -1,0 +1,17 @@
+<h1>Received Messages</h1>
+<% @received_messages.each do |message| %>
+  <div>
+    <strong>From:</strong> <%= message.sender.username %>
+    <p><%= message.content %></p>
+    <small><%= message.created_at %></small>
+  </div>
+<% end %>
+
+<h1>Sent Messages</h1>
+<% @sent_messages.each do |message| %>
+  <div>
+    <strong>To:</strong> <%= message.receiver.username %>
+    <p><%= message.content %></p>
+    <small><%= message.created_at %></small>
+  </div>
+<% end %>

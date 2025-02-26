@@ -15,7 +15,19 @@ class UsersController < ApplicationController
     @favorited_tweets = @user.favorited_tweets
     @followers = @user.followers
     @followings = @user.followings
+
+   
+    @user = User.find(params[:id])
+    @friends = @user.friends
+    @message = Message.new
+
+    @messages = {}
+    @friends.each do |friend|
+      @messages[friend.id] = @user.conversation_with_friend(friend)
+    end
   end
+  
+  
 
   def edit
     redirect_to user_path(@user), alert: 'Not authorized' unless current_user == @user

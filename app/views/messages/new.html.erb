@@ -1,0 +1,25 @@
+<% if @message.errors.any? %>
+  <div class="alert alert-danger">
+    <ul>
+      <% @message.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: @message, url: messages_path do |form| %>
+  <div>
+    <%= form.label :receiver_id, 'Destinataire :' %>
+    <%= form.collection_select :receiver_id, User.where.not(id: current_user.id), :id, :username, prompt: 'Sélectionnez un destinataire' %>
+  </div>
+
+  <div>
+    <%= form.label :content, 'Message :' %>
+    <%= form.text_area :content %>
+  </div>
+
+  <div>
+    <%= form.submit 'Envoyer' %>
+  </div>
+<% end %>
