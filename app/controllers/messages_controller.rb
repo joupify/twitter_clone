@@ -25,6 +25,8 @@ class MessagesController < ApplicationController
     end
   
     @message.receiver = @receiver
+    @message.parent_id = params[:message][:parent_id] if params[:message][:parent_id].present?
+
   
     if @message.save
       redirect_to messages_path, notice: 'Message envoyé avec succès.'

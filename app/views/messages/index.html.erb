@@ -1,17 +1,17 @@
-<h1>Received Messages</h1>
-<% @received_messages.each do |message| %>
-  <div>
-    <strong>From:</strong> <%= message.sender.username %>
-    <p><%= message.content %></p>
-    <small><%= message.created_at %></small>
-  </div>
+<h1>Messages reçus</h1>
+<% if @received_messages.any? %>
+  <% @received_messages.each do |message| %>
+    <%= render 'message', message: message %>
+  <% end %>
+<% else %>
+  <p>Aucun message reçu.</p>
 <% end %>
 
-<h1>Sent Messages</h1>
-<% @sent_messages.each do |message| %>
-  <div>
-    <strong>To:</strong> <%= message.receiver.username %>
-    <p><%= message.content %></p>
-    <small><%= message.created_at %></small>
-  </div>
+<h1>Messages envoyés</h1>
+<% if @sent_messages.any? %>
+  <% @sent_messages.each do |message| %>
+    <%= render 'message', message: message %>
+  <% end %>
+<% else %>
+  <p>Aucun message envoyé.</p>
 <% end %>

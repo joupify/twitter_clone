@@ -1,0 +1,26 @@
+<div class="card mb-3">
+  <div class="card-body">
+    <h5 class="card-title">
+      <% if message.sender == current_user %>
+        À : <%= message.receiver.username %>
+      <% else %>
+        De : <%= message.sender.username %>
+      <% end %>
+    </h5>
+    <p class="card-text"><%= message.content %></p>
+    <small class="text-muted"><%= message.created_at.strftime("%d/%m/%Y %H:%M") %></small>
+
+    <% if message.sender != current_user %>
+      <%= link_to 'Répondre', new_message_path(receiver_id: message.sender.id, parent_id: message.id), class: 'btn btn-primary btn-sm mt-2' %>
+    <% end %>
+
+    <% if message.replies.any? %>
+      <div class="mt-3">
+        <h6>Réponses :</h6>
+        <% message.replies.each do |reply| %>
+          <%= render 'message', message: reply %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

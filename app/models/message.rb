@@ -6,6 +6,7 @@
 #  content     :text
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  parent_id   :bigint
 #  receiver_id :bigint
 #  sender_id   :bigint
 #
@@ -22,6 +23,9 @@
 class Message < ApplicationRecord
   belongs_to :sender, class_name: 'User'
   belongs_to :receiver, class_name: 'User'
+
+  belongs_to :parent, class_name: 'Message', optional: true
+  has_many :replies, class_name: 'Message', foreign_key: 'parent_id', dependent: :destroy
 
   validates :content, presence: true
   validates :content, presence: true

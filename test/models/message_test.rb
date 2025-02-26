@@ -6,6 +6,7 @@
 #  content     :text
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  parent_id   :bigint
 #  receiver_id :bigint
 #  sender_id   :bigint
 #
