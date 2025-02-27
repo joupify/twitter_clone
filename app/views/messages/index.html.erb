@@ -1,17 +1,8 @@
 <h1>Messages reçus</h1>
-<% if @received_messages.any? %>
-  <% @received_messages.each do |message| %>
+<% if @messages.any? %>
+  <% @messages.each do |message| %>
     <%= render 'message', message: message %>
   <% end %>
 <% else %>
   <p>Aucun message reçu.</p>
-<% end %>
-
-<h1>Messages envoyés</h1>
-<% if @sent_messages.any? %>
-  <% @sent_messages.each do |message| %>
-    <%= render 'message', message: message %>
-  <% end %>
-<% else %>
-  <p>Aucun message envoyé.</p>
 <% end %>

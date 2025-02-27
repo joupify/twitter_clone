@@ -31,6 +31,20 @@ class Message < ApplicationRecord
   validates :content, presence: true
   validate :sender_and_receiver_are_different
 
+  # Récupère les messages racines (sans parent)
+  scope :roots, -> { where(parent_id: nil) }
+
+  # Méthode récursive pour construire l'arborescence
+  def self.build_tree(messages = roots)
+    messages.includes(:sender, :receiver, replies: [:sender, :receiver]).map do |message|
+      {
+        message: message,
+        replies: build_tree(message.replies)
+      }
+    end
+  end
+
+  
   private
 
   def sender_and_receiver_are_different

@@ -1,26 +1,42 @@
-<div class="card mb-3">
-  <div class="card-body">
-    <h5 class="card-title">
-      <% if message.sender == current_user %>
-        À : <%= message.receiver.username %>
-      <% else %>
-        De : <%= message.sender.username %>
-      <% end %>
-    </h5>
-    <p class="card-text"><%= message.content %></p>
-    <small class="text-muted"><%= message.created_at.strftime("%d/%m/%Y %H:%M") %></small>
+<div class="flow-root">
+  <ul role="list" class="-mb-8">
+    <li>
+      <div class="relative pb-8">
+        <div class="relative flex items-start space-x-3">
+          <div class="relative">
+            <img class="h-5 w-5 rounded-full bg-gray-400 flex items-center justify-center ring-8 ring-white"
+              src="https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80"
+              alt="" style="height: 30px; width: 30px">
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="text-sm">
+              <a href="#" class="font-medium text-gray-900"><%= message.sender.email %></a>
+            </div>
+            <p class="mt-0.5 text-sm text-gray-500">Sent <%= time_ago_in_words(message.created_at) %> ago</p>
+            <div class="mt-2 text-gray-700">
+              <p><%= message.content %></p>
 
-    <% if message.sender != current_user %>
-      <%= link_to 'Répondre', new_message_path(receiver_id: message.sender.id, parent_id: message.id), class: 'btn btn-primary btn-sm mt-2' %>
-    <% end %>
+							<p>Current user ID: <%= current_user.id %></p>
+						<% if message.sender != current_user %>
+						<%= link_to 'Reply', new_message_path(receiver_id: message.receiver_id, parent_id: message.id), class: 'text-blue' %>
+								<% end %>
+	
+            </div>
 
-    <% if message.replies.any? %>
-      <div class="mt-3">
-        <h6>Réponses :</h6>
-        <% message.replies.each do |reply| %>
-          <%= render 'message', message: reply %>
-        <% end %>
+            <!-- Appel récursif pour afficher les réponses -->
+            <!-- Appel récursif pour afficher les réponses -->
+							<% if message.replies.any? %>
+							  
+								<div class="ml-8 border-l border-gray-300 pl-4">
+									<% message.replies.each do |reply| %>
+										<%= render 'message', message: reply %>
+									<% end %>
+								</div>
+							<% end %>
+
+          </div>
+        </div>
       </div>
-    <% end %>
-  </div>
+    </li>
+  </ul>
 </div>

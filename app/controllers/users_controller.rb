@@ -18,13 +18,9 @@ class UsersController < ApplicationController
 
    
     @user = User.find(params[:id])
-    @friends = @user.friends
     @message = Message.new
 
-    @messages = {}
-    @friends.each do |friend|
-      @messages[friend.id] = @user.conversation_with_friend(friend)
-    end
+
   end
   
   

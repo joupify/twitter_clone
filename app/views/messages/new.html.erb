@@ -1,25 +1,19 @@
-<% if @message.errors.any? %>
-  <div class="alert alert-danger">
-    <ul>
-      <% @message.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-
+<h1>New Message</h1>
 <%= form_with model: @message, url: messages_path do |form| %>
   <div>
-    <%= form.label :receiver_id, 'Destinataire :' %>
-    <%= form.collection_select :receiver_id, User.where.not(id: current_user.id), :id, :username, prompt: 'Sélectionnez un destinataire' %>
+    <%= form.label :receiver_id, 'To:' %>
+    <%= form.collection_select :receiver_id, User.where.not(id: current_user.id), :id, :username %>
   </div>
+  
+  <!-- Ajouter un champ caché pour le parent_id si c'est une réponse -->
+  <%= form.hidden_field :parent_id, value: params[:parent_id] %>
 
   <div>
-    <%= form.label :content, 'Message :' %>
+    <%= form.label :content, 'Message:' %>
     <%= form.text_area :content %>
   </div>
-
+  
   <div>
-    <%= form.submit 'Envoyer' %>
+    <%= form.submit 'Send' %>
   </div>
 <% end %>
