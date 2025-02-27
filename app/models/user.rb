@@ -36,7 +36,6 @@ class User < ApplicationRecord
   has_many :favorited_tweets, through: :favorites, source: :tweet
   has_many :notifications, class_name: 'Noticed::Notification', as: :recipient, dependent: :destroy
 
-  has_many :messages, dependent: :destroy
 
   has_many :sent_messages, class_name: 'Message', foreign_key: 'sender_id'
   has_many :received_messages, class_name: 'Message', foreign_key: 'receiver_id'

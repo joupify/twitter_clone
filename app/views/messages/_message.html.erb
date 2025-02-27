@@ -24,15 +24,11 @@
             </div>
 
             <!-- Appel récursif pour afficher les réponses -->
-            <!-- Appel récursif pour afficher les réponses -->
-							<% if message.replies.any? %>
-							  
 								<div class="ml-8 border-l border-gray-300 pl-4">
-									<% message.replies.each do |reply| %>
+									<% message.replies.preload(:sender).each do |reply| %>
 										<%= render 'message', message: reply %>
 									<% end %>
 								</div>
-							<% end %>
 
           </div>
         </div>

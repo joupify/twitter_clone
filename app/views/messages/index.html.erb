@@ -1,7 +1,12 @@
 <h1>Messages reçus</h1>
+
 <% if @messages.any? %>
   <% @messages.each do |message| %>
+	<% cache message.id do %>
+
     <%= render 'message', message: message %>
+		<% end %>
+
   <% end %>
 <% else %>
   <p>Aucun message reçu.</p>

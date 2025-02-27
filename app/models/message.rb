@@ -28,8 +28,14 @@ class Message < ApplicationRecord
   has_many :replies, class_name: 'Message', foreign_key: 'parent_id', dependent: :destroy
 
   validates :content, presence: true
-  validates :content, presence: true
   validate :sender_and_receiver_are_different
+
+  # Scope pour obtenir les messages envoyés ou reçus par un utilisateur
+  scope :for_user, ->(user) { where("sender_id = ? OR receiver_id = ?", user.id, user.id) }
+
+
+  # Scope pour précharger les réponses et leurs expéditeurs
+  scope :with_replies, -> { includes(replies: [:sender]) }
 
   # Récupère les messages racines (sans parent)
   scope :roots, -> { where(parent_id: nil) }
@@ -44,7 +50,7 @@ class Message < ApplicationRecord
     end
   end
 
-  
+
   private
 
   def sender_and_receiver_are_different
