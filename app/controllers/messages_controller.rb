@@ -2,10 +2,15 @@ class MessagesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @received_messages = current_user.received_messages
-    @sent_messages = current_user.sent_messages
+    
+   # Messages envoyés par l'utilisateur connecté
+   @sent_messages = current_user.sent_messages.includes(:receiver, :replies)
+
+   # Messages reçus par l'utilisateur connecté
+   @received_messages = current_user.received_messages.includes(:sender, :replies)
+
     @messages = Message.includes(:sender) # Inclut les expéditeurs des messages et des réponses
-    .for_user(current_user)
+                 .for_user(current_user)
                  .where(parent_id: nil)
                  .order(created_at: :desc)
 
@@ -15,10 +20,10 @@ class MessagesController < ApplicationController
 
   def new
   
-   @message = Message.new(receiver_id: params[:receiver_id])
+    @message = Message.new(receiver_id: params[:receiver_id])
     @message.parent_id = params[:parent_id] if params[:parent_id].present? # Ajout du parent_id
-     @parent_message = Message.find_by(id: params[:parent_id]) # Récupère le message parent
-  @receiver = @parent_message.sender # Le destinataire de la réponse est l'expéditeur du message parent
+    @parent_message = Message.find_by(id: params[:parent_id]) # Récupère le message parent
+    @receiver = @parent_message.sender # Le destinataire de la réponse est l'expéditeur du message parent
   end
 
 
@@ -28,7 +33,7 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
     @receiver = User.find_by(id: @message.receiver_id)
     @parent_message = Message.find_by(id: @message.parent_id)
-  @message.receiver = @parent_message.sender # Le destinataire de la réponse est l'expéditeur du message parent
+    @message.receiver = @parent_message.sender # Le destinataire de la réponse est l'expéditeur du message parent
   
     if @receiver.nil?
       redirect_to users_path, alert: 'Destinataire non trouvé.'

@@ -5,8 +5,8 @@
         <div class="relative flex items-start space-x-3">
           <div class="relative">
             <img class="h-5 w-5 rounded-full bg-gray-400 flex items-center justify-center ring-8 ring-white"
-              src="https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80"
-              alt="" style="height: 30px; width: 30px">
+								src="https://source.unsplash.com/256x256/?face,portrait"
+								alt="" style="height: 30px; width: 30px">
           </div>
           <div class="min-w-0 flex-1">
             <div class="text-sm">
@@ -25,7 +25,7 @@
 
             <!-- Appel récursif pour afficher les réponses -->
 								<div class="ml-8 border-l border-gray-300 pl-4">
-									<% message.replies.preload(:sender).each do |reply| %>
+									<% message.replies.includes(:sender).each do |reply| %>
 										<%= render 'message', message: reply %>
 									<% end %>
 								</div>

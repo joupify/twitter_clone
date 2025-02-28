@@ -94,7 +94,5 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
 
 
-  # strict_loading pour détecter les N+1 queries
-  config.active_record.strict_loading_by_default = true
 
 end
