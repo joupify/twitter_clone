@@ -45,6 +45,8 @@ class TweetsController < ApplicationController
       flash[:notice] = 'You cannot retweet your own tweet.'
     else
     current_user.tweets.create(content: original_tweet.content, parent_id: original_tweet.id)
+    # original_tweet.increment!(:retweets_count) # Important !
+
     flash[:notice] = 'ReTweet created!'
 
     end

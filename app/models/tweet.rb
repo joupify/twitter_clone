@@ -39,11 +39,26 @@ class Tweet < ApplicationRecord
 
   validates :content, presence: true, length: { maximum: 280 }
 
-  after_create_commit { broadcast_prepend_to 'tweets' }
+  # after_create_commit { broadcast_prepend_to 'tweets' }
   after_initialize :set_defaults
 
   has_many :mentions, dependent: :destroy
   after_save :extract_mentions
+
+  after_create_commit :broadcast_tweet_or_update_retweet_count
+
+  def broadcast_tweet_or_update_retweet_count
+    if parent_id.present?
+      # C'est un retweet → broadcast uniquement le compteur mis à jour
+      parent_tweet = Tweet.find(parent_id)
+
+      broadcast_replace_later_to "tweets", target: "retweets_count_#{parent_tweet.id}", partial: "tweets/retweets_count", locals: { tweet: parent_tweet }
+    else
+      # Vrai tweet → broadcast normal
+      broadcast_prepend_to "tweets"
+    end
+  end
+  
 
 
   def retweets?(user)

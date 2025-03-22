@@ -14,7 +14,10 @@
         <%= link_to retweet_tweet_path(tweet), method: :post, data: { turbo_method: :post }, class: "retweet-button mx-0" do %>
           <i class="fas fa-retweet text-secondary"></i>
         <% end %>
-        <span class="retweets-count text-secondary mx-1"><%= tweet.retweets_count %></span>
+          <span class="retweets-count text-secondary mx-1" id="retweets_count_<%= tweet.id %>">
+             <%= tweet.retweets_count %> Retweets
+          </span>
+
       </div>
       
       <!-- Likes -->

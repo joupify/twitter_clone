@@ -1,0 +1,35 @@
+
+
+<turbo-frame id="new_message">
+
+<h1>New Message</h1>
+
+<%= form_with model: @message, url: messages_path do |form| %>
+  <% if params[:parent_id].present? %>
+    <!-- Si c'est une réponse, désactiver le champ de sélection du destinataire -->
+    <% parent_message = Message.find(params[:parent_id]) %>
+    <%= form.hidden_field :receiver_id, value: parent_message.sender.id %>
+    <div>
+      <strong>To:</strong> <%= parent_message.sender.username %>
+    </div>
+  <% else %>
+    <!-- Si ce n'est pas une réponse, afficher le champ de sélection du destinataire -->
+    <div>
+      <%= form.label :receiver_id, 'To:' %>
+      <%= form.collection_select :receiver_id, User.where.not(id: current_user.id), :id, :username %>
+    </div>
+  <% end %>
+
+  <!-- Ajouter un champ caché pour le parent_id si c'est une réponse -->
+  <%= form.hidden_field :parent_id, value: params[:parent_id] %>
+
+  <div>
+    <%= form.label :content, 'Message:' %>
+    <%= form.text_area :content %>
+  </div>
+
+  <div>
+    <%= form.submit 'Send' %>
+  </div>
+<% end %>
+</turbo-frame>

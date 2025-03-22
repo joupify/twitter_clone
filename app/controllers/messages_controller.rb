@@ -23,7 +23,7 @@ class MessagesController < ApplicationController
     @message = Message.new(receiver_id: params[:receiver_id])
     @message.parent_id = params[:parent_id] if params[:parent_id].present? # Ajout du parent_id
     @parent_message = Message.find_by(id: params[:parent_id]) # Récupère le message parent
-    @receiver = @parent_message.sender # Le destinataire de la réponse est l'expéditeur du message parent
+    @message.receiver = @parent_message.sender if @parent_message.present? # Le destinataire de la réponse est l'expéditeur du message parent
   end
 
 
@@ -33,7 +33,7 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
     @receiver = User.find_by(id: @message.receiver_id)
     @parent_message = Message.find_by(id: @message.parent_id)
-    @message.receiver = @parent_message.sender # Le destinataire de la réponse est l'expéditeur du message parent
+    @message.receiver = @parent_message.sender if @parent_message.present? # Le destinataire de la réponse est l'expéditeur du message parent
   
     if @receiver.nil?
       redirect_to users_path, alert: 'Destinataire non trouvé.'
@@ -41,10 +41,18 @@ class MessagesController < ApplicationController
     end
   
     if @message.save
-      redirect_to messages_path, notice: 'Message envoyé avec succès.'
+      respond_to do |format|
+        if request.headers['Turbo-Frame'].present?
+          format.turbo_stream do
+           
+            render turbo_stream: turbo_stream.replace("reply_form", "")# pour clean le form
+          end
+        else
+          format.html { redirect_to messages_path, notice: "Message sent!" }
+        end
+      end
     else
-      flash.now[:alert] = @message.errors.full_messages.join(', ')
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 

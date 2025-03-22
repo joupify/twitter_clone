@@ -40,6 +40,18 @@ class Message < ApplicationRecord
   # Récupère les messages racines (sans parent)
   scope :roots, -> { where(parent_id: nil) }
 
+  after_create_commit :broadcast_message
+  after_update_commit :broadcast_message
+
+  # after_create_commit -> { broadcast_prepend_to "messages" }
+  #  after_update_commit -> { broadcast_replace_to "messages" }
+  #  after_destroy_commit -> { broadcast_remove_to "messages" }
+
+  #  broadcasts_to ->(message) { [:parent_id, "messages"] }, inserts_by: :prepend
+
+  # after_create:broadcast_message
+
+
   # Méthode récursive pour construire l'arborescence
   def self.build_tree(messages = roots)
     messages.includes(:sender, :receiver, replies: [:sender, :receiver]).map do |message|
@@ -52,6 +64,31 @@ class Message < ApplicationRecord
 
 
   private
+
+
+
+  def broadcast_message
+    stream_name = "messages_#{receiver_id}"
+  
+    if parent_id.present?
+      puts "Broadcasting reply to: replies_to_#{parent_id}" # Log pour debug
+      broadcast_append_to(
+        stream_name,
+        target: "replies_to_#{parent_id}",
+        partial: "messages/message",
+        locals: { message: self }
+      )
+    else
+      puts "Broadcasting main message to: messages-container" # Log pour debug
+      broadcast_append_to(
+        stream_name,
+        target: "messages-container",
+        partial: "messages/message",
+        locals: { message: self }
+      )
+    end
+  end
+  
 
   def sender_and_receiver_are_different
     if sender_id == receiver_id

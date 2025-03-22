@@ -1,17 +1,19 @@
+<%= turbo_stream_from "messages" %>
+
+    <%= turbo_frame_tag "messages" do %>
+
 <h1>Messages reçus</h1>
-
-<% if @messages.any? %>
-  <% @messages.each do |message| %>
-	<% cache message.id do %>
-
-    <%= render 'message', message: message %>
-		<% end %>
-
+<div id="messages-container">
+  <% if @messages.any? %>
+    <% @messages.each do |message| %>
+      <%= render 'message', message: message %>
+    <% end %>
+  <% else %>
+    <p>Aucun message reçu.</p>
   <% end %>
-<% else %>
-  <p>Aucun message reçu.</p>
-<% end %>
+</div>
+  <% end %>
 
 
-
-
+<!-- Turbo Frame pour le formulaire de réponse -->
+<%= turbo_frame_tag "reply_form" %>
