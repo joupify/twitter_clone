@@ -28,6 +28,11 @@ class TweetsController < ApplicationController
     @tweet = current_user.tweets.new(tweet_params)
 
     if @tweet.save
+      @tweet.body.scan(/#\w+/).each do |tag|
+        hashtag = Hashtag.find_or_create_by(name: tag.downcase)
+        @tweet.hashtags << hashtag unless @tweet.hashtags.include?(hashtag)
+      end
+
       flash.now[:notice] = 'Tweet created!'
 
     else

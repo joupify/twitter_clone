@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_26_203511) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_24_224948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -86,6 +86,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_26_203511) do
     t.index ["followed_id"], name: "index_follows_on_followed_id"
     t.index ["follower_id", "followed_id"], name: "index_follows_on_follower_id_and_followed_id", unique: true
     t.index ["follower_id"], name: "index_follows_on_follower_id"
+  end
+
+  create_table "hashtaggings", force: :cascade do |t|
+    t.bigint "tweet_id", null: false
+    t.bigint "hashtag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hashtag_id"], name: "index_hashtaggings_on_hashtag_id"
+    t.index ["tweet_id"], name: "index_hashtaggings_on_tweet_id"
+  end
+
+  create_table "hashtags", force: :cascade do |t|
+    t.string "name"
+    t.integer "tweets_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_hashtags_on_name"
   end
 
   create_table "likes", force: :cascade do |t|
@@ -188,6 +205,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_26_203511) do
   add_foreign_key "favorites", "users"
   add_foreign_key "follows", "users", column: "followed_id"
   add_foreign_key "follows", "users", column: "follower_id"
+  add_foreign_key "hashtaggings", "hashtags"
+  add_foreign_key "hashtaggings", "tweets"
   add_foreign_key "likes", "tweets"
   add_foreign_key "likes", "users"
   add_foreign_key "mentions", "tweets"

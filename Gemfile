@@ -60,7 +60,10 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
   gem 'letter_opener'
+  gem 'annotaterb'
+
 end
+
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
@@ -73,14 +76,10 @@ gem 'bootstrap', '~> 5.3.0'
 gem 'font-awesome-sass', '~> 6.1'
 gem 'simple_form', '~> 5.2'
 gem 'autoprefixer-rails'
-
 gem 'bullet', '~> 8.0'
-
 gem 'noticed', '~> 2.6'
-
 gem 'sidekiq', '~> 7.3'
 
-gem 'annotaterb'
 
 
 # pour lire les fichiers excel

@@ -34,6 +34,9 @@ class Tweet < ApplicationRecord
   has_many :favorites, dependent: :destroy
   has_many :favorited_by_users, through: :favorites, source: :tweet
 
+  has_many :hashtaggings, dependent: :destroy
+  has_many :hashtags, through: :hashtaggings
+
   scope :originals, -> { where(parent_id: nil) } # Pour filtrer les tweets non retweetés
 
 

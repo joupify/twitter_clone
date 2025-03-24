@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: hashtags
+#
+#  id           :bigint           not null, primary key
+#  name         :string
+#  tweets_count :integer          default(0)
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+# Indexes
+#
+#  index_hashtags_on_name  (name)
+#
+one:
+  name: MyString
+  tweets_count: 1
+
+two:
+  name: MyString
+  tweets_count: 1
