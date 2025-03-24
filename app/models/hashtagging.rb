@@ -20,5 +20,5 @@
 #
 class Hashtagging < ApplicationRecord
   belongs_to :tweet
-  belongs_to :hashtag, counter_cache: :true
+  belongs_to :hashtag, counter_cache: :tweets_count
 end

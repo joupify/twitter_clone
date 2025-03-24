@@ -21,7 +21,6 @@ class Hashtag < ApplicationRecord
   Hashtag.order(tweets_count: :desc).limit(10)
 
 
-  before_validation :downcase_name
 
   private
 
