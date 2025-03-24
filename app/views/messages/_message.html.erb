@@ -1,0 +1,36 @@
+<div id="message_<%= message.id %>" class="flow-root">
+  <ul role="list" class="-mb-8">
+    <li>
+      <div class="relative pb-8">
+        <div class="relative flex items-start space-x-3">
+          <div class="relative">
+            <img class="h-5 w-5 rounded-full bg-gray-400 flex items-center justify-center ring-8 ring-white"
+                 src="https://source.unsplash.com/256x256/?face,portrait"
+                 alt="" style="height: 30px; width: 30px">
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="text-sm">
+              <a href="#" class="font-medium text-gray-900"><%= message.sender.email %></a>
+            </div>
+            <p class="mt-0.5 text-sm text-gray-500">Sent <%= time_ago_in_words(message.created_at) %> ago</p>
+            <div class="mt-2 text-gray-700">
+              <p><%= message.content %></p>
+								<% if message.sender != ::CurrentAttributes.user %>
+  							<%= link_to 'Reply', new_message_path(receiver_id: message.receiver_id, parent_id: message.id),
+									data: { turbo_frame: "reply_form" },
+									class: 'text-blue' %>
+								<% end %>
+            </div>
+            <!-- Appel récursif pour afficher les réponses -->
+            <div id="replies_to_<%= message.id %>" class="ml-8 border-l border-gray-300 pl-4" style="padding-left: 20px; margin-top: 10px;">
+              <% message.replies.includes(:sender).each do |reply| %>
+                <%= render 'message', message: reply %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+

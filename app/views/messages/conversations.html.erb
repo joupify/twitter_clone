@@ -1,0 +1,7 @@
+<h1>Conversations</h1>
+
+<% @user_with_conversations.each do |friend| %>
+	<li>
+      <%= link_to friend.name, user_messages_path(friend) %>
+	</li>
+<% end %>

@@ -1,22 +1,23 @@
-<div class="card  mb-3 tweet-container retweet-depth-<%= tweet_depth(tweet) %>" id="tweet_<%= tweet.id %>" data-controller="likes" data-likes-tweet-id-value="<%= tweet.id %>">
-  <div class="card-body ">
+<div class="card mb-3 tweet-container retweet-depth-<%= tweet_depth(tweet) %>" id="tweet_<%= tweet.id %>" data-controller="likes" data-likes-tweet-id-value="<%= tweet.id %>">
+  <div class="card-body">
     <h5 class="card-title"><%= tweet.user.username %></h5>
     <p class="card-text"><%= linkify_mentions(tweet.content) %></p>
 
- 
     <p class="card-text">
       <small class="text-small text-secondary"><%= time_ago_in_words(tweet.created_at) %> ago</small>
     </p>
 
     <!-- Actions: Like, Retweet & Reply -->
     <div class="tweet-actions d-flex align-items-center gap-3">
-
       <!-- Retweet Button -->
-      <div class="d-flex align-items-center ">
+      <div class="d-flex align-items-center">
         <%= link_to retweet_tweet_path(tweet), method: :post, data: { turbo_method: :post }, class: "retweet-button mx-0" do %>
           <i class="fas fa-retweet text-secondary"></i>
         <% end %>
-        <span class="retweets-count  text-secondary mx-1"><%= tweet.retweets_count %></span>
+          <span class="retweets-count text-secondary mx-1" id="retweets_count_<%= tweet.id %>">
+             <%= tweet.retweets_count %> Retweets
+          </span>
+
       </div>
       
       <!-- Likes -->
@@ -25,65 +26,60 @@
           <i class="fas fa-heart text-danger"></i>
         <% end %>
 
-        <%= button_to like_tweet_path(tweet), method: :post, class: "border-0 badge rounded-pill  text-dark p-0 m-0 #{@user_liked_tweet_ids&.include?(tweet.id) ? 'd-none' : ''}  bg-transparent", data: { action: "click->likes#like", likes_target: "likeButton" } do %>
+        <%= button_to like_tweet_path(tweet), method: :post, class: "border-0 badge rounded-pill text-dark p-0 m-0 #{@user_liked_tweet_ids&.include?(tweet.id) ? 'd-none' : ''} bg-transparent", data: { action: "click->likes#like", likes_target: "likeButton" } do %>
           <i class="far fa-heart text-secondary"></i>
         <% end %>
 
-        <span class="likes-count p-0 mx-1  text-secondary bg-transparent" data-likes-target="likesCount"><%= tweet.likes_count %></span>
+        <span class="likes-count p-0 mx-1 text-secondary bg-transparent" data-likes-target="likesCount"><%= tweet.likes_count %></span>
       </div>
 
       <!-- Reply Button -->
       <div class="d-flex align-items-center">
         <%= link_to tweet_path(tweet), class: "mx-2" do %>
-          <i class="fas fa-comment  text-secondary"></i> <!-- Comment Icon -->
+          <i class="fas fa-comment text-secondary"></i>
         <% end %>
         <span class="comments-count text-secondary"><%= tweet.comments_count %></span>
       </div>
 
       <!-- Views Count -->
       <div class="d-flex align-items-center">
-        <i class="fas fa-eye text-secondary mx-2"></i> <!-- Views Icon -->
-          <div data-controller="tweet" data-action="turbo:load->tweet#increment" data-tweet-id="<%= tweet.id %>">
+        <i class="fas fa-eye text-secondary mx-2"></i>
+        <div data-controller="tweet" data-action="turbo:load->tweet#increment" data-tweet-id="<%= tweet.id %>">
           <span class="views-count text-secondary"><%= tweet.views_count %></span>
-          </div>
+        </div>
       </div>
       
       <!-- Favorites -->
-     <div class="d-flex align-items-center">
-      <% if @user&.favorited?(tweet) %>
-        <%= button_to unfavorite_tweet_path(tweet), method: :delete, class: "background-transparent " do %>
-          <i class="fas fa-bookmark text-secondary"></i> <!-- Save Icon -->
+      <div class="d-flex align-items-center">
+        <% if @user&.favorited?(tweet) %>
+          <%= button_to unfavorite_tweet_path(tweet), method: :delete, class: "background-transparent" do %>
+            <i class="fas fa-bookmark text-secondary"></i>
+          <% end %>
+        <% else %>
+          <%= button_to favorite_tweet_path(tweet), method: :post, class: "background-transparent" do %>
+            <i class="far fa-bookmark text-secondary"></i>
+          <% end %>
         <% end %>
-      <% else %>
-        <%= button_to favorite_tweet_path(tweet), method: :post, class: "background-transparent" do %>
-          <i class="far fa-bookmark text-secondary"></i> <!-- Save Icon -->
-        <% end %>
-      <% end %>
-    </div>
+      </div>
 
       <!-- Share Button -->
       <div class="d-flex align-items-center">
-       <a href="#" class="mx-2" data-bs-toggle="modal" data-bs-target="#shareModal" data-tweet-id="<%= tweet.id %>">
-          <i class="fas fa-share-alt"></i> <!-- Share Icon -->
+        <a href="#" class="mx-2" data-bs-toggle="modal" data-bs-target="#shareModal" data-tweet-id="<%= tweet.id %>">
+          <i class="fas fa-share-alt"></i>
         </a>
       </div>
-
     </div>
 
     <!-- Retweets affichés en cascade -->
     <% if tweet.retweets.any? %>
-    <div class="retweets">
-      <% tweet.retweets.each do |retweet| %>
-        <%
-=begin%>
- <p><%= retweet.user.name %> a retweeté ceci.</p> 
-<%
-=end%>
-      <% end %>
-    </div>
-  <% end %>
-
-</div>
+      <div class="retweets">
+        <% tweet.retweets.each do |retweet| %>
+          <!-- Contenu du retweet -->
+        <% end %>
+      </div>
+    <% end %>
+  </div> <!-- Fermeture de la div card-body -->
+</div> <!-- Fermeture de la div card -->
 
 <!-- Modal for sharing -->
 <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
@@ -95,23 +91,22 @@
       </div>
       <div class="modal-body">
         <!-- Options for sharing -->
-        <ul class="list d-flex  gap-2">
+        <ul class="list d-flex gap-2">
           <li><a href="https://twitter.com/intent/tweet?url=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-twitter text-primary"></i> Twitter</a></li>
           <li><a href="https://www.facebook.com/sharer/sharer.php?u=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-facebook text-primary"></i> Facebook</a></li>
           <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-linkedin text-primary"></i> LinkedIn</a></li>
           <li><a href="https://api.whatsapp.com/send?text=<%= tweet_url(tweet) %>" target="_blank"><i class="fab fa-whatsapp text-success"></i> WhatsApp</a></li>
           <li><a href="mailto:?subject=Check%20out%20this%20tweet&body=<%= tweet_url(tweet) %>" target="_blank"><i class="fas fa-envelope text-danger"></i> Email</a></li>
-        <li>
-          <a href="#" 
-            data-controller="copy-link" 
-            data-copy-link-url-value="<%= tweet_url(tweet) %>" 
-            data-action="click->copy-link#copy">
-            <span data-copy_link-target="icon"><i class="fas fa-link"></i> Copy Tweet Link</span>
-          </a>
-        </li>
+          <li>
+            <a href="#" 
+              data-controller="copy-link" 
+              data-copy-link-url-value="<%= tweet_url(tweet) %>" 
+              data-action="click->copy-link#copy">
+              <span data-copy-link-target="icon"><i class="fas fa-link"></i> Copy Tweet Link</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
   </div>
 </div>
-

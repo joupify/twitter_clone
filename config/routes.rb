@@ -34,4 +34,7 @@ Rails.application.routes.draw do
       delete 'unfavorite', to: 'tweets#unfavorite'
     end
   end
+
+  get 'conversations', to: 'messages#conversations'
+    resources :messages
 end

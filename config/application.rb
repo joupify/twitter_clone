@@ -31,5 +31,8 @@ module Twitter
     config.middleware.use Warden::Manager do |manager|
       manager.default_strategies :database_authenticatable
     end
+
+    config.autoload_paths += %W(#{config.root}/config/initializers)
+
   end
 end

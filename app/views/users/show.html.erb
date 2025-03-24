@@ -70,4 +70,52 @@
       <p>Vous ne suivez personne</p>
     <% end %>
   </div>
+
+  <div class="card mt-3">
+    <div class="card-body">
+      <h3>Messages</h3>
+<p><%= link_to 'Send Message', new_message_path(receiver_id: @user.id) %></p>
+<%= link_to 'Voir mes messages', messages_path, class: 'btn btn-primary' %>
+
+<%
+=begin%>
+ <ul>
+  <% @user.friends.each do |friend| %>
+    <li>
+      <%= link_to friend.name, user_messages_path(friend) %>
+    </li>
+  <% end %>
+</ul>
+
+<!-- Section pour afficher les messages avec chaque ami -->
+<% @user.friends.each do |friend| %>
+  <% messages = @user.conversation_with_friend(friend) %>
+  <h2>Conversation avec <%= friend.name %></h2>
+  <ul>
+    <% messages&.each do |message| %>
+      <li>
+        <%= message.content %>
+        <% if message.sender == @user %>
+          <small>(Envoyé par vous)</small>
+        <% else %>
+          <small>(Envoyé par <%= message.sender.name %>)</small>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= form_with(model: Message.new, url: user_messages_path(friend)) do |form| %>
+    <%= form.text_field :content %>
+    <%= form.hidden_field :receiver_id, value: friend.id %>
+    <%= form.submit %>
+  <% end %>
+<% end %>
+
+
+
+    </div>
+
 </div>
+ 
+<%
+=end%>

@@ -37,6 +37,9 @@ class User < ApplicationRecord
   has_many :notifications, class_name: 'Noticed::Notification', as: :recipient, dependent: :destroy
 
 
+  has_many :sent_messages, class_name: 'Message', foreign_key: 'sender_id'
+  has_many :received_messages, class_name: 'Message', foreign_key: 'receiver_id'
+
   has_one_attached :avatar
   has_one_attached :banner
 
@@ -181,6 +184,23 @@ class User < ApplicationRecord
     end
   end
 
+#   # Récupère tous les amis avec qui l'utilisateur a eu une conversation
+#   def friends
+#     # Récupère tous les expéditeurs des messages reçus par l'utilisateur
+#     senders = Message.where(sender: self).map(&:receiver)
+#     # Récupère tous les destinataires des messages envoyés par l'utilisateur
+#     receivers = Message.where(receiver: self).map(&:sender)
+#     # Retourne la liste des amis (expéditeurs + destinataires) sans doublons
+#     (senders + receivers).uniq
+#   end
+
+# # Récupère la conversation avec un ami
+# def conversation_with_friend(friend)
+#   Message.where(
+#     '(sender_id = :user_id AND receiver_id = :friend_id) OR (sender_id = :friend_id AND receiver_id = :user_id)',
+#     user_id: self.id, friend_id: friend.id
+#   ).order(:created_at)
+# end
 
   private
 

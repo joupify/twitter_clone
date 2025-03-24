@@ -1,0 +1,8 @@
+
+<%= turbo_stream.append "messages" do %>
+  <%= render partial: "message", locals: { message: @message } %>
+<% end %>
+
+<%= turbo_stream.append "replies_to_#{@message.parent_id}" do %>
+  <%= render partial: "messages/message", locals: { message: @message } %>
+<% end %>
