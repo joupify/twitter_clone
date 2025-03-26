@@ -33,12 +33,14 @@
         <span class="likes-count p-0 mx-1 text-secondary bg-transparent" data-likes-target="likesCount"><%= tweet.likes_count %></span>
       </div>
 
-      <!-- Reply Button -->
+      <!-- comments -->
       <div class="d-flex align-items-center">
         <%= link_to tweet_path(tweet), class: "mx-2" do %>
           <i class="fas fa-comment text-secondary"></i>
         <% end %>
         <span class="comments-count text-secondary"><%= tweet.comments_count %></span>
+        <>
+
       </div>
 
       <!-- Views Count -->
@@ -71,13 +73,13 @@
     </div>
 
     <!-- Retweets affichés en cascade -->
-    <% if tweet.retweets.any? %>
-      <div class="retweets">
+    <%# <% if tweet.retweets.any? %>
+      <%# <div class="retweets">
         <% tweet.retweets.each do |retweet| %>
           <!-- Contenu du retweet -->
-        <% end %>
-      </div>
-    <% end %>
+        <%# end %>
+      </div> 
+    <%# end %> 
   </div> <!-- Fermeture de la div card-body -->
 </div> <!-- Fermeture de la div card -->
 
