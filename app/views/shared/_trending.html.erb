@@ -1,0 +1,5 @@
+<h1>Tendances</h1>
+<ul>
+	<% @trending_hashtags&.each do |hashtag| %>
+    <li><%= link_to hashtag.name, hashtag_path(hashtag) %> (<%= hashtag.tweets_count %> tweets)</li>
+	<% end %>

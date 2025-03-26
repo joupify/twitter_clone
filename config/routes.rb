@@ -23,6 +23,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root 'tweets#index'
 
+  get 'hashtags/:id', to: 'tweets#hashtag', as: 'hashtag'
+
+
   resources :tweets do
     resources :comments, only: [ :index, :new, :create, :destroy ]
     member do

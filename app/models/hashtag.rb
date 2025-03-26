@@ -18,9 +18,10 @@ class Hashtag < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
-  Hashtag.order(tweets_count: :desc).limit(10)
+  scope :trending, -> { order(tweets_count: :desc).limit(10) }
 
 
+  before_validation :downcase_name
 
   private
 
