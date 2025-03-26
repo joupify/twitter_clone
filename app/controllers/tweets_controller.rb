@@ -2,15 +2,18 @@ class TweetsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_tweet
   def index
-  @tweets = Tweet.where(parent_id: nil).includes(:user, :retweets).order(created_at: :desc)
-    @tweet = Tweet.new
-    @user_liked_tweet_ids = current_user&.liked_tweets&.pluck(:id) || []
-  # @user_commented_tweet_ids = current_user&.commented_tweets&.pluck(:id) || []
+    @tweets = Tweet.where(parent_id: nil).includes(:user, :retweets).order(created_at: :desc)
+      @tweet = Tweet.new
+      @user_liked_tweet_ids = current_user&.liked_tweets&.pluck(:id) || []
+    # @user_commented_tweet_ids = current_user&.commented_tweets&.pluck(:id) || []
 
-  respond_to do |format|
-    format.html # Rend la vue HTML par défaut (index.html.erb)
-    format.turbo_stream # Rend la vue Turbo Stream par défaut (index.turbo_stream.erb)
-  end
+    respond_to do |format|
+      format.html # Rend la vue HTML par défaut (index.html.erb)
+      format.turbo_stream # Rend la vue Turbo Stream par défaut (index.turbo_stream.erb)
+    end
+
+    @trending_hashtags = Hashtag.trending
+
   end
 
 
@@ -28,6 +31,11 @@ class TweetsController < ApplicationController
     @tweet = current_user.tweets.new(tweet_params)
 
     if @tweet.save
+      @tweet.content.scan(/#\w+/).each do |tag|
+        hashtag = Hashtag.find_or_create_by(name: tag.downcase)
+        @tweet.hashtags << hashtag unless @tweet.hashtags.include?(hashtag)
+      end
+
       flash.now[:notice] = 'Tweet created!'
 
     else
@@ -147,6 +155,12 @@ def unfavorite
     format.html { redirect_to tweets_path }
   end
 end
+
+def hashtag
+  @hashtag = Hashtag.find(params[:id])
+  @tweets = @hashtag.tweets.order(created_at: :desc)
+end
+
 
 
   private

@@ -34,20 +34,30 @@
         </button>
       </header>
 
-  
-    <div id="flash" class="flash <%= 'flash-content' if notice || alert  %>">
-      <%= render "layouts/flash" %>
+    <div class="container d-flex justify-content-between">
+     <div class="trending-container">
+      <%= render 'shared/trending' %> <!-- Affichage de la sidebar -->
     </div>
 
-    <% if user_signed_in? %>
-      Hi <%= current_user.email %>
-      <%= link_to "Profil", user_path(current_user) %>
-      <%= button_to "Log Out", destroy_user_session_path, method: :delete  %> 
-    <% else %>
-      <%= link_to "Sign in", new_user_session_path %>
-    <% end %>
+    <div class="main-content">
 
-    <%= yield %>
+      <div id="flash" class="flash <%= 'flash-content' if notice || alert  %>">
+        <%= render "layouts/flash" %>
+      </div>
+
+      <% if user_signed_in? %>
+        Hi <%= current_user.email %>
+        <%= link_to "Profil", user_path(current_user) %>
+        <%= button_to "Log Out", destroy_user_session_path, method: :delete  %> 
+      <% else %>
+        <%= link_to "Sign in", new_user_session_path %>
+      <% end %>
+
+      <%= yield %>
+    </div>
+
+   
+  </div>
 
   </body>
 </html>

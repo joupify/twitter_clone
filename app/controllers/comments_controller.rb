@@ -7,6 +7,10 @@ class CommentsController < ApplicationController
     @comment = @tweet.comments.build # Cela crée une instance unique de Comment
   end
 
+  def show
+    @comment = Comment.find(params[:id])
+  end
+
 
 
 

@@ -1,0 +1,8 @@
+<h1><%= @hashtag.name %></h1>
+<p><%= @hashtag.tweets_count %> tweets</p>
+
+<ul>
+  <% @tweets.each do |tweet| %>
+    <li><%= tweet.content %> - <em>par <%= tweet.user.username %></em></li>
+  <% end %>
+</ul>
