@@ -6,6 +6,7 @@
 #  content    :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  parent_id  :integer
 #  tweet_id   :bigint           not null
 #  user_id    :bigint           not null
 #
@@ -22,6 +23,9 @@
 class Comment < ApplicationRecord
   belongs_to :tweet, counter_cache: :comments_count
   belongs_to :user, counter_cache: :comments_count
+
+  belongs_to :parent, class_name: 'Comment', optional: true
+  has_many :replies, class_name: 'Comment', foreign_key: :parent_id, dependent: :destroy
 
   validates :content, presence: true
 

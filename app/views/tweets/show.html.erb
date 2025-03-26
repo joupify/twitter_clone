@@ -5,27 +5,43 @@
       <div class="card-body">
         <h1 class="card-title"><%= @tweet.content %></h1>
 
-        <h2 class="mt-4">Commentaires</h2>
-        <ul class="list-group mb-4">
-          <% @tweet.comments.each do |comment| %>
-            <li class="list-group-item">
-              <strong><%= comment.user.email %> :</strong>
-              <span><%= comment.content %></span>
-            </li>
-          <% end %>
-        </ul>
+
 
         <!-- Formulaire pour ajouter un commentaire -->
-        <div class="card p-3 bg-light">
-          <h5>Ajouter un commentaire</h5>
-          <%= form_with(model: [@tweet, @tweet.comments.build], local: true, class: "mt-3") do |form| %>
-            <div class="mb-3">
-              <%= form.label :content, "Votre commentaire", class: "form-label" %>
-              <%= form.text_area :content, required: true, class: "form-control", rows: 3 %>
+       <h3>Commentaires</h3>
+
+      <% @tweet.comments.where(parent_id: nil).each do |comment| %>
+        <div class="comment">
+          <p><strong><%= comment.user.username %></strong> : <%= comment.content %></p>
+          
+          <!-- Bouton Répondre -->
+          <button class="btn btn-link" onclick="document.getElementById('reply-form-<%= comment.id %>').style.display='block'">Répondre</button>
+
+          <!-- Formulaire de réponse caché -->
+          <div id="reply-form-<%= comment.id %>" style="display: none;">
+            <%= form_with(model: [@tweet, @tweet.comments.build], local: true) do |form| %>
+              <%= form.hidden_field :parent_id, value: comment.id %>
+              <div class="mb-3">
+                <%= form.text_area :content, class: "form-control", placeholder: "Réponse..." %>
+              </div>
+              <%= form.submit "Répondre", class: "btn btn-primary btn-sm" %>
+            <% end %>
+          </div>
+
+          <!-- Affichage des réponses -->
+          <% if comment.replies.any? %>
+            <div class="replies">
+              <% comment.replies.each do |reply| %>
+                <div class="reply">
+                  <p><strong><%= reply.user.username %></strong> : <%= reply.content %></p>
+                </div>
+              <% end %>
             </div>
-            <%= form.submit "Poster", class: "btn btn-primary" %>
           <% end %>
+
         </div>
+      <% end %>
+
 
         <div class="mt-3">
           <%= link_to 'Voir tous les commentaires', tweet_comments_path(@tweet), class: "btn btn-secondary" %>

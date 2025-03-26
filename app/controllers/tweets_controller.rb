@@ -20,6 +20,8 @@ class TweetsController < ApplicationController
   def show
     @tweet = Tweet.find_by(id: params[:id]) # Utilisez `find_by` pour éviter une exception si le tweet n'existe pas
     # increment_views  # Incrémente aussi les vues ici
+    @comment = @tweet.comments.new
+    @comments = @tweet.comments.includes(:user).order(created_at: :desc)
 
     if @tweet.nil?
       redirect_to tweets_path, alert: 'Tweet non trouvé'

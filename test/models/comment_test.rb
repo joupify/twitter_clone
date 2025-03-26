@@ -6,6 +6,7 @@
 #  content    :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  parent_id  :integer
 #  tweet_id   :bigint           not null
 #  user_id    :bigint           not null
 #
