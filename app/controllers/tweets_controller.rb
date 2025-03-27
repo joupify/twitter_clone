@@ -18,9 +18,10 @@ class TweetsController < ApplicationController
 
 
   def show
-    @tweet = Tweet.find_by(id: params[:id]) # Utilisez `find_by` pour éviter une exception si le tweet n'existe pas
+    @tweet = Tweet.find(params[:id])
     @comment = Comment.new(tweet: @tweet)  # Crée un nouveau commentaire lié à ce tweet
     @comments = @tweet.comments.includes(:user).where(parent_id: nil) # Ne charger que les commentaires principaux
+
 
 
     if @tweet.nil?

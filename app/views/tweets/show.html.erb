@@ -1,24 +1,20 @@
-<!-- app/views/tweets/show.html.erb -->
 <div class="container mt-4">
   <% if @tweet %>
     <div class="card shadow-sm">
       <div class="card-body">
         <h1 class="card-title"><%= @tweet.content %></h1>
 
+        <h3>Commentaires</h3>
 
+        <% @tweet.comments.where(parent_id: nil).each do |comment| %>
+          <%= render 'comments/comment', comment: comment, depth: 0 %>
+        <% end %>
 
-        <!-- Formulaire pour ajouter un commentaire -->
-       <h3>Commentaires</h3>
-
-
-<% @tweet.comments.where(parent_id: nil).each do |comment| %>
-  <%= render 'comments/comment', comment: comment %> <!-- Supprimez 'locals:' -->
-<% end %>
-
-<!-- Formulaire pour ajouter un commentaire principal -->
-<%= render 'comments/comment', comment: Comment.new(tweet: @tweet) %> <!-- Supprimez 'locals:' -->
-
-
+        <!-- Formulaire principal pour les nouveaux commentaires -->
+        <div class="new-comment-form mt-3">
+          <h5>Ajouter un commentaire</h5>
+          <%= render 'comments/form', comment: @tweet.comments.build %>
+        </div>
 
         <div class="mt-3">
           <%= link_to 'Voir tous les commentaires', tweet_comments_path(@tweet), class: "btn btn-secondary" %>
