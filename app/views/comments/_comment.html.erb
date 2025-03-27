@@ -1,0 +1,33 @@
+<div class="comment">
+  <% if comment.persisted? %>
+    <p><strong><%= comment.user.username %></strong> : <%= comment.content %></p>
+    
+    <!-- Bouton Répondre (n'affiche que si le comment existe) -->
+    <button class="btn btn-link" onclick="document.getElementById('reply-form-<%= comment.id %>').style.display='block'">Répondre</button>
+
+    <div id="reply-form-<%= comment.id %>" style="display: none; margin-left: 20px;">
+      <%= form_with(model: [@tweet, comment.tweet.comments.build], local: true) do |form| %>
+        <%= form.hidden_field :parent_id, value: comment.id %>
+        <%= form.text_area :content, class: "form-control", placeholder: "Répondre à ce commentaire" %>
+        <%= form.submit "Envoyer", class: "btn btn-primary btn-sm" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if comment.parent_id.nil? %> <!-- Formulaire principal seulement pour les nouveaux commentaires -->
+    <h5>Ajouter un commentaire</h5>
+    <%= form_with(model: [comment.tweet, comment], local: true) do |form| %>
+      <%= form.text_area :content, class: "form-control", placeholder: "Votre commentaire..." %>
+      <%= form.submit "Commenter", class: "btn btn-primary mt-2" %>
+    <% end %>
+  <% end %>
+
+  <!-- Affichage des réponses -->
+  <% if comment.persisted? && comment.replies.any? %>
+    <div class="replies" style="margin-left: 20px; border-left: 2px solid #ccc; padding-left: 10px;">
+      <% comment.replies.each do |reply| %>
+        <%= render partial: "comments/comment", locals: { comment: reply } %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

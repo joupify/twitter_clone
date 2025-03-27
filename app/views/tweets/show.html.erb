@@ -10,37 +10,14 @@
         <!-- Formulaire pour ajouter un commentaire -->
        <h3>Commentaires</h3>
 
-      <% @tweet.comments.where(parent_id: nil).each do |comment| %>
-        <div class="comment">
-          <p><strong><%= comment.user.username %></strong> : <%= comment.content %></p>
-          
-          <!-- Bouton Répondre -->
-          <button class="btn btn-link" onclick="document.getElementById('reply-form-<%= comment.id %>').style.display='block'">Répondre</button>
 
-          <!-- Formulaire de réponse caché -->
-          <div id="reply-form-<%= comment.id %>" style="display: none;">
-            <%= form_with(model: [@tweet, @tweet.comments.build], local: true) do |form| %>
-              <%= form.hidden_field :parent_id, value: comment.id %>
-              <div class="mb-3">
-                <%= form.text_area :content, class: "form-control", placeholder: "Réponse..." %>
-              </div>
-              <%= form.submit "Répondre", class: "btn btn-primary btn-sm" %>
-            <% end %>
-          </div>
+<% @tweet.comments.where(parent_id: nil).each do |comment| %>
+  <%= render 'comments/comment', comment: comment %> <!-- Supprimez 'locals:' -->
+<% end %>
 
-          <!-- Affichage des réponses -->
-          <% if comment.replies.any? %>
-            <div class="replies">
-              <% comment.replies.each do |reply| %>
-                <div class="reply">
-                  <p><strong><%= reply.user.username %></strong> : <%= reply.content %></p>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
+<!-- Formulaire pour ajouter un commentaire principal -->
+<%= render 'comments/comment', comment: Comment.new(tweet: @tweet) %> <!-- Supprimez 'locals:' -->
 
-        </div>
-      <% end %>
 
 
         <div class="mt-3">

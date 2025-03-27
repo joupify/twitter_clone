@@ -42,6 +42,6 @@ def set_tweet
 end
 
 def comment_params
-  params.require(:comment).permit(:content)
+  params.require(:comment).permit(:content, :parent_id)
 end
 end
