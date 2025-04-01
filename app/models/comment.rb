@@ -30,10 +30,16 @@ class Comment < ApplicationRecord
   validates :content, presence: true
 
   after_create :notify_tweet_owner
+  after_destroy :update_counter
+
 
   private
 
   def notify_tweet_owner
     tweet.user.notify_user(:comment, self)
+  end
+
+  def update_counter
+    tweet.decrement!(:comments_count) if tweet.present?
   end
 end

@@ -43,15 +43,6 @@ class Message < ApplicationRecord
   after_create_commit :broadcast_message
   after_update_commit :broadcast_message
 
-  # after_create_commit -> { broadcast_prepend_to "messages" }
-  #  after_update_commit -> { broadcast_replace_to "messages" }
-  #  after_destroy_commit -> { broadcast_remove_to "messages" }
-
-  #  broadcasts_to ->(message) { [:parent_id, "messages"] }, inserts_by: :prepend
-
-  # after_create:broadcast_message
-
-
   # Méthode récursive pour construire l'arborescence
   def self.build_tree(messages = roots)
     messages.includes(:sender, :receiver, replies: [:sender, :receiver]).map do |message|

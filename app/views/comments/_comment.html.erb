@@ -1,26 +1,25 @@
-<%# depth permet de gérer l'indentation des réponses imbriquées %>
-<div class="comment mb-3" style="margin-left: <%= depth * 20 %>px;">
-  <div class="d-flex align-items-center mb-1">
-    <strong class="me-2"><%= comment.user.username %></strong>
-    <span><%= comment.content %></span>
-  </div>
+<%= turbo_stream_from "comments_#{comment.id}" %>
 
-  <!-- Bouton Répondre -->
-  <button class="btn btn-link btn-sm p-0 mb-2"
-          onclick="document.getElementById('reply-form-<%= comment.id %>').style.display='block'; this.style.display='none'">
+<div class="comment mb-3" data-controller="reply-form" data-comment-id="<%= comment.id %>">
+  <p><%= comment.content %></p>
+
+  <%# Bouton "Répondre" qui affiche le formulaire et se cache lui-même %>
+  <button class="btn btn-primary btn-sm" 
+          data-action="click->reply-form#toggle" 
+          data-reply-form-target="button">
     Répondre
   </button>
 
-  <!-- Formulaire de réponse (masqué par défaut) -->
-  <div id="reply-form-<%= comment.id %>" style="display: none;" class="mb-3">
+  <%# Formulaire de réponse %>
+  <div id="reply-form-<%= comment.id %>" 
+       data-reply-form-target="form" 
+       style="display: none;" 
+       class="mb-3">
     <%= render 'comments/form', comment: comment.tweet.comments.build(parent_id: comment.id) %>
   </div>
 
-  <!-- Affichage récursif des réponses -->
-	<% if depth < 5 %>
-		<% comment.replies.includes(:user).order(created_at: :asc).each do |reply| %>
-			<%= render 'comments/comment', comment: reply, depth: depth + 1 %>
-		<% end %>
-	<% end %>
-
+  <%# Affichage des réponses imbriquées %>
+  <div class="replies" id="replies-<%= comment.id %>">
+    <%= render partial: "comments/comment", collection: comment.replies, locals: { depth: depth + 1 } %>
+  </div>
 </div>

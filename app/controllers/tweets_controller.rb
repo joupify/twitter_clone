@@ -21,6 +21,7 @@ class TweetsController < ApplicationController
     @tweet = Tweet.find(params[:id])
     @comment = Comment.new(tweet: @tweet)  # Crée un nouveau commentaire lié à ce tweet
     @comments = @tweet.comments.includes(:user).where(parent_id: nil) # Ne charger que les commentaires principaux
+    @comment.user = current_user
 
 
 
@@ -34,6 +35,7 @@ class TweetsController < ApplicationController
     @tweet = current_user.tweets.new(tweet_params)
 
     if @tweet.save
+      # trending (hashtags) creation
       @tweet.content.scan(/#\w+/).each do |tag|
         hashtag = Hashtag.find_or_create_by(name: tag.downcase)
         @tweet.hashtags << hashtag unless @tweet.hashtags.include?(hashtag)

@@ -6,9 +6,12 @@
 
         <h3>Commentaires</h3>
 
-        <% @tweet.comments.where(parent_id: nil).each do |comment| %>
-          <%= render 'comments/comment', comment: comment, depth: 0 %>
-        <% end %>
+        <div id="comments-list">
+         <% @tweet.comments.where(parent_id: nil).includes(:user).order(:created_at).each do |comment| %>
+            <%= render 'comments/comment', comment: comment, depth: 0 %>
+          <% end %>
+        </div>
+
 
         <!-- Formulaire principal pour les nouveaux commentaires -->
         <div class="new-comment-form mt-3">
@@ -25,3 +28,7 @@
     <p class="alert alert-danger">Le tweet n'a pas été trouvé.</p>
   <% end %>
 </div>
+
+
+
+
