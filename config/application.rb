@@ -32,7 +32,6 @@ module Twitter
       manager.default_strategies :database_authenticatable
     end
 
-    config.autoload_paths += %W(#{config.root}/config/initializers)
-
+    config.autoload_paths += %W[#{config.root}/config/initializers]
   end
 end

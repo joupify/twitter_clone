@@ -44,5 +44,4 @@ Rails.application.routes.draw do
     resources :comments do
       post 'replies', to: 'comments#create_reply', as: 'create_reply'
     end
-    
 end

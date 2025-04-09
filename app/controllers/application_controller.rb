@@ -11,6 +11,4 @@ class ApplicationController < ActionController::Base
   def set_current_user
     ::CurrentAttributes.user = current_user
   end
-
-
 end

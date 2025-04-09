@@ -9,15 +9,15 @@ class TweetsController < ApplicationController
 
     # search
     if params[:query].present?
-      @tweets = @tweets.where("content ILIKE ?", "%#{params[:query]}%")
+      @tweets = @tweets.where('content ILIKE ?', "%#{params[:query]}%")
     end
 
     if params[:hashtag].present?
-      @tweets = @tweets.joins(:hashtags).where("hashtags.name LIKE ?", "%#{params[:hashtag]}%")
+      @tweets = @tweets.joins(:hashtags).where('hashtags.name LIKE ?', "%#{params[:hashtag]}%")
     end
 
     if params[:username].present?
-      @tweets = @tweets.joins(:users).where("users.username ILIKE ?", "%#{params[:username]}%")
+      @tweets = @tweets.joins(:users).where('users.username ILIKE ?', "%#{params[:username]}%")
     end
 
 
@@ -27,7 +27,6 @@ class TweetsController < ApplicationController
     end
 
     @trending_hashtags = Hashtag.trending
-
   end
 
 

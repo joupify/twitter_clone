@@ -31,11 +31,11 @@ class Message < ApplicationRecord
   validate :sender_and_receiver_are_different
 
   # Scope pour obtenir les messages envoyés ou reçus par un utilisateur
-  scope :for_user, ->(user) { where("sender_id = ? OR receiver_id = ?", user.id, user.id) }
+  scope :for_user, ->(user) { where('sender_id = ? OR receiver_id = ?', user.id, user.id) }
 
 
   # Scope pour précharger les réponses et leurs expéditeurs
-  scope :with_replies, -> { includes(replies: [:sender]) }
+  scope :with_replies, -> { includes(replies: [ :sender ]) }
 
   # Récupère les messages racines (sans parent)
   scope :roots, -> { where(parent_id: nil) }
@@ -45,7 +45,7 @@ class Message < ApplicationRecord
 
   # Méthode récursive pour construire l'arborescence
   def self.build_tree(messages = roots)
-    messages.includes(:sender, :receiver, replies: [:sender, :receiver]).map do |message|
+    messages.includes(:sender, :receiver, replies: [ :sender, :receiver ]).map do |message|
       {
         message: message,
         replies: build_tree(message.replies)
@@ -60,30 +60,30 @@ class Message < ApplicationRecord
 
   def broadcast_message
     stream_name = "messages_#{receiver_id}"
-  
+
     if parent_id.present?
       puts "Broadcasting reply to: replies_to_#{parent_id}" # Log pour debug
       broadcast_append_to(
         stream_name,
         target: "replies_to_#{parent_id}",
-        partial: "messages/message",
+        partial: 'messages/message',
         locals: { message: self }
       )
     else
-      puts "Broadcasting main message to: messages-container" # Log pour debug
+      puts 'Broadcasting main message to: messages-container' # Log pour debug
       broadcast_append_to(
         stream_name,
-        target: "messages-container",
-        partial: "messages/message",
+        target: 'messages-container',
+        partial: 'messages/message',
         locals: { message: self }
       )
     end
   end
-  
+
 
   def sender_and_receiver_are_different
     if sender_id == receiver_id
-      errors.add(:receiver_id, "Vous ne pouvez pas vous envoyer un message à vous-même.")
+      errors.add(:receiver_id, 'Vous ne pouvez pas vous envoyer un message à vous-même.')
     end
   end
 

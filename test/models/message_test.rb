@@ -20,7 +20,7 @@
 #  fk_rails_...  (receiver_id => users.id)
 #  fk_rails_...  (sender_id => users.id)
 #
-require "test_helper"
+require 'test_helper'
 
 class MessageTest < ActiveSupport::TestCase
   # test "the truth" do

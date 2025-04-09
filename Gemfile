@@ -61,7 +61,6 @@ group :development do
   gem 'web-console'
   gem 'letter_opener'
   gem 'annotaterb'
-
 end
 
 

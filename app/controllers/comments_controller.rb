@@ -19,12 +19,12 @@ class CommentsController < ApplicationController
     @comment = @tweet.comments.build(comment_params)
     @comment.user = current_user
     @depth = @comment.parent_id ? params[:depth].to_i + 1 : 0
-    
+
 
     if @comment.save
       respond_to do |format|
         format.turbo_stream
-        format.html { redirect_to @tweet, notice: "Commentaire ajouté !" }
+        format.html { redirect_to @tweet, notice: 'Commentaire ajouté !' }
       end
     else
       respond_to do |format|
@@ -48,7 +48,7 @@ def create_reply
   @reply.user = current_user
 
   respond_to do |format|
-    format.turbo_stream { render turbo_stream: turbo_stream.append("replies-#{@comment.id}", partial: "comments/comment", locals: { comment: @reply, depth: 1 }) }
+    format.turbo_stream { render turbo_stream: turbo_stream.append("replies-#{@comment.id}", partial: 'comments/comment', locals: { comment: @reply, depth: 1 }) }
     format.html { redirect_to tweet_path(@comment.tweet) }
   end
 end

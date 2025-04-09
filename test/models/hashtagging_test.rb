@@ -18,7 +18,7 @@
 #  fk_rails_...  (hashtag_id => hashtags.id)
 #  fk_rails_...  (tweet_id => tweets.id)
 #
-require "test_helper"
+require 'test_helper'
 
 class HashtaggingTest < ActiveSupport::TestCase
   # test "the truth" do
