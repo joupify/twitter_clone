@@ -40,4 +40,8 @@ Rails.application.routes.draw do
 
   get 'conversations', to: 'messages#conversations'
     resources :messages
+
+    resources :comments do
+      post 'replies', to: 'comments#create_reply', as: 'create_reply'
+    end
 end

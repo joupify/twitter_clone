@@ -12,7 +12,7 @@
 #
 #  index_hashtags_on_name  (name)
 #
-require "test_helper"
+require 'test_helper'
 
 class HashtagTest < ActiveSupport::TestCase
   # test "the truth" do

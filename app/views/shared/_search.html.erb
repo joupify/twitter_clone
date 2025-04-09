@@ -1,0 +1,18 @@
+
+<!-- # search -->
+<div class="container">
+  
+      <h2>Search Tweets</h2>
+  
+  <div class= "form-control mb-3">
+  <%= form_with url: tweets_path, method: :get, local: true  do %>
+    <div class="form-group">
+      <%= text_field_tag :query, params[:query], placeholder: "Tapez un mot clé ...", class:"form-control mb-3"  %>
+      <%= text_field_tag :hashtag, params[:hashtag], placeholder: "Hashtag (ex: #rails)...", class:"form-control mb-3"  %>
+      <%= text_field_tag :username, params[:username], placeholder: "Auteur ...", class:"form-control mb-3"  %>
+      <%= submit_tag "Search", class: "btn btn-warning mb-3" %>
+    </div>
+
+  <% end %>
+  </div>
+</div>

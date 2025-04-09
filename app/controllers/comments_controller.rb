@@ -18,12 +18,18 @@ class CommentsController < ApplicationController
     @tweet = Tweet.find(params[:tweet_id])
     @comment = @tweet.comments.build(comment_params)
     @comment.user = current_user
+    @depth = @comment.parent_id ? params[:depth].to_i + 1 : 0
+
+
     if @comment.save
-      flash[:notice] = 'Comment was successfully created.'
-      redirect_to tweet_path(@tweet) # Ajoutez une redirection après la création
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @tweet, notice: 'Commentaire ajouté !' }
+      end
     else
-      flash[:alert] = @comment.errors.full_messages.to_sentence
-      redirect_to tweet_path(@tweet) # Redirigez vers la page du tweet en cas d'erreur
+      respond_to do |format|
+        format.html { render 'tweets/show', status: :unprocessable_entity }
+      end
     end
   end
 
@@ -35,6 +41,19 @@ class CommentsController < ApplicationController
     redirect_to tweet_path(@tweet)
   end
 
+# app/controllers/comments_controller.rb
+def create_reply
+  @comment = Comment.find(params[:id])
+  @reply = @comment.replies.create(comment_params)
+  @reply.user = current_user
+
+  respond_to do |format|
+    format.turbo_stream { render turbo_stream: turbo_stream.append("replies-#{@comment.id}", partial: 'comments/comment', locals: { comment: @reply, depth: 1 }) }
+    format.html { redirect_to tweet_path(@comment.tweet) }
+  end
+end
+
+
 
 private
 def set_tweet
@@ -42,6 +61,6 @@ def set_tweet
 end
 
 def comment_params
-  params.require(:comment).permit(:content)
+  params.require(:comment).permit(:content, :parent_id)
 end
 end

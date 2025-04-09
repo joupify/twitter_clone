@@ -1,0 +1,25 @@
+<%= turbo_stream_from "comments_#{comment.id}" %>
+
+<div class="comment mb-3" data-controller="reply-form" data-comment-id="<%= comment.id %>">
+  <p><%= comment.content %></p>
+
+  <%# Bouton "Répondre" qui affiche le formulaire et se cache lui-même %>
+  <button class="btn btn-primary btn-sm" 
+          data-action="click->reply-form#toggle" 
+          data-reply-form-target="button">
+    Répondre
+  </button>
+
+  <%# Formulaire de réponse %>
+  <div id="reply-form-<%= comment.id %>" 
+       data-reply-form-target="form" 
+       style="display: none;" 
+       class="mb-3">
+    <%= render 'comments/form', comment: comment.tweet.comments.build(parent_id: comment.id) %>
+  </div>
+
+  <%# Affichage des réponses imbriquées %>
+  <div class="replies" id="replies-<%= comment.id %>">
+    <%= render partial: "comments/comment", collection: comment.replies, locals: { depth: depth + 1 } %>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<% if @comment.parent_id.present? %>
+  <%= turbo_stream.append "replies-#{@comment.parent_id}" do %>
+  <%= render partial: "comments/comment", locals: { comment: @comment, depth: (@depth || 0) } %>
+
+  <% end %>
+<% else %>
+  <%= turbo_stream.append "comments-list" do %>
+  	<%= render 'comments/comment', comment: @comment, depth: 0 %>
+  <% end %>
+<% end %>
+
+
+<%= turbo_stream.update "comment-count-#{@comment.tweet.id}" do %>
+  <%= render partial: "comments/comment_count", locals: { tweet: @comment.tweet } %>
+<% end %>
+

@@ -1,30 +1,22 @@
-<!-- app/views/tweets/show.html.erb -->
 <div class="container mt-4">
   <% if @tweet %>
     <div class="card shadow-sm">
       <div class="card-body">
         <h1 class="card-title"><%= @tweet.content %></h1>
 
-        <h2 class="mt-4">Commentaires</h2>
-        <ul class="list-group mb-4">
-          <% @tweet.comments.each do |comment| %>
-            <li class="list-group-item">
-              <strong><%= comment.user.email %> :</strong>
-              <span><%= comment.content %></span>
-            </li>
-          <% end %>
-        </ul>
+        <h3>Commentaires</h3>
 
-        <!-- Formulaire pour ajouter un commentaire -->
-        <div class="card p-3 bg-light">
-          <h5>Ajouter un commentaire</h5>
-          <%= form_with(model: [@tweet, @tweet.comments.build], local: true, class: "mt-3") do |form| %>
-            <div class="mb-3">
-              <%= form.label :content, "Votre commentaire", class: "form-label" %>
-              <%= form.text_area :content, required: true, class: "form-control", rows: 3 %>
-            </div>
-            <%= form.submit "Poster", class: "btn btn-primary" %>
+        <div id="comments-list">
+         <% @tweet.comments.where(parent_id: nil).order(:created_at).each do |comment| %>
+            <%= render 'comments/comment', comment: comment, depth: 0 %>
           <% end %>
+        </div>
+
+
+        <!-- Formulaire principal pour les nouveaux commentaires -->
+        <div class="new-comment-form mt-3">
+          <h5>Ajouter un commentaire</h5>
+          <%= render 'comments/form', comment: @tweet.comments.build %>
         </div>
 
         <div class="mt-3">
@@ -36,3 +28,7 @@
     <p class="alert alert-danger">Le tweet n'a pas été trouvé.</p>
   <% end %>
 </div>
+
+
+
+

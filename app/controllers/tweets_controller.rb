@@ -2,10 +2,24 @@ class TweetsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_tweet
   def index
-    @tweets = Tweet.where(parent_id: nil).includes(:user, :retweets).order(created_at: :desc)
+    @tweets = Tweet.where(parent_id: nil).includes(:user).order(created_at: :desc)
       @tweet = Tweet.new
       @user_liked_tweet_ids = current_user&.liked_tweets&.pluck(:id) || []
     # @user_commented_tweet_ids = current_user&.commented_tweets&.pluck(:id) || []
+
+    # search
+    if params[:query].present?
+      @tweets = @tweets.where('content ILIKE ?', "%#{params[:query]}%")
+    end
+
+    if params[:hashtag].present?
+      @tweets = @tweets.joins(:hashtags).where('hashtags.name LIKE ?', "%#{params[:hashtag]}%")
+    end
+
+    if params[:username].present?
+      @tweets = @tweets.joins(:users).where('users.username ILIKE ?', "%#{params[:username]}%")
+    end
+
 
     respond_to do |format|
       format.html # Rend la vue HTML par défaut (index.html.erb)
@@ -13,13 +27,14 @@ class TweetsController < ApplicationController
     end
 
     @trending_hashtags = Hashtag.trending
-
   end
 
 
   def show
-    @tweet = Tweet.find_by(id: params[:id]) # Utilisez `find_by` pour éviter une exception si le tweet n'existe pas
-    # increment_views  # Incrémente aussi les vues ici
+    @tweet = Tweet.find(params[:id])
+    @comment = Comment.new(tweet: @tweet)  # Crée un nouveau commentaire lié à ce tweet
+    @comments = @tweet.comments.includes(:user).where(parent_id: nil) # Ne charger que les commentaires principaux
+    @comment.user = current_user
 
     if @tweet.nil?
       redirect_to tweets_path, alert: 'Tweet non trouvé'
@@ -31,6 +46,7 @@ class TweetsController < ApplicationController
     @tweet = current_user.tweets.new(tweet_params)
 
     if @tweet.save
+      # trending (hashtags) creation
       @tweet.content.scan(/#\w+/).each do |tag|
         hashtag = Hashtag.find_or_create_by(name: tag.downcase)
         @tweet.hashtags << hashtag unless @tweet.hashtags.include?(hashtag)

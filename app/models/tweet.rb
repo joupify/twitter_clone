@@ -55,13 +55,13 @@ class Tweet < ApplicationRecord
       # C'est un retweet → broadcast uniquement le compteur mis à jour
       parent_tweet = Tweet.find(parent_id)
 
-      broadcast_replace_later_to "tweets", target: "retweets_count_#{parent_tweet.id}", partial: "tweets/retweets_count", locals: { tweet: parent_tweet }
+      broadcast_replace_later_to 'tweets', target: "retweets_count_#{parent_tweet.id}", partial: 'tweets/retweets_count', locals: { tweet: parent_tweet }
     else
       # Vrai tweet → broadcast normal
-      broadcast_prepend_to "tweets"
+      broadcast_prepend_to 'tweets'
     end
   end
-  
+
 
 
   def retweets?(user)

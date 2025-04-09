@@ -16,14 +16,12 @@ class UsersController < ApplicationController
     @followers = @user.followers
     @followings = @user.followings
 
-   
+
     @user = User.find(params[:id])
     @message = Message.new
-
-
   end
-  
-  
+
+
 
   def edit
     redirect_to user_path(@user), alert: 'Not authorized' unless current_user == @user

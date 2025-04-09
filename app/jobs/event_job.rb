@@ -67,7 +67,7 @@ class EventJob < ApplicationJob
     tweet = event.tweet
     comment = event.comment
 
-      CommentNotifier.with(tweet: tweet, user: user, comment: comment).deliver_later(user)
+    # CommentNotifier.with(tweet: tweet, user: user, comment: comment).deliver_later(user)
   end
 
 

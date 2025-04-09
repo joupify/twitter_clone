@@ -1,0 +1,22 @@
+/* app/assets/stylesheets/comments.css */
+.comment {
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.comment .reply-link {
+  font-size: 0.8em;
+  color: #1da1f2;
+  text-decoration: none;
+}
+
+.comment .reply-link:hover {
+  text-decoration: underline;
+}
+
+
+.replies {
+  border-left: 2px solid #e1e8ed;
+  padding-left: 15px;
+  margin-top: 10px;
+}
