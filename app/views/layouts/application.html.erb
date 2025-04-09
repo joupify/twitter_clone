@@ -34,10 +34,15 @@
         </button>
       </header>
 
-    <div class="container d-flex justify-content-between">
-     <div class="trending-container">
-      <%= render 'shared/trending' %> <!-- Affichage de la sidebar -->
-    </div>
+  <div class="container d-flex justify-content-between">
+      <div class="sidebar-container">
+        <div class="trending-container mb-3">
+          <%= render 'shared/trending' %> <!-- Affichage de la sidebar -->
+        </div>
+        <div class="search-container">
+          <%= render 'shared/search' %> <!-- Affichage de search -->
+        </div>
+      </div>
 
     <div class="main-content">
 
@@ -55,10 +60,7 @@
 
       <%= yield %>
     </div>
-
-   
   </div>
-
   </body>
 </html>
 

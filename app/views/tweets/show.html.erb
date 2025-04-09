@@ -7,7 +7,7 @@
         <h3>Commentaires</h3>
 
         <div id="comments-list">
-         <% @tweet.comments.where(parent_id: nil).includes(:user).order(:created_at).each do |comment| %>
+         <% @tweet.comments.where(parent_id: nil).order(:created_at).each do |comment| %>
             <%= render 'comments/comment', comment: comment, depth: 0 %>
           <% end %>
         </div>

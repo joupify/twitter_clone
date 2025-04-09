@@ -1,6 +1,6 @@
 <%= form_with(model: tweet, local: true, ) do |form| %>
   <div class="form-group">
-    <%= form.text_area :content, class: 'form-control', placeholder: "What's happening?" %>
+    <%= form.text_area :content, class: 'form-control mt-3', placeholder: "What's happening? " %>
   </div>
-  <%= form.submit 'Tweet', class: 'btn btn-warning' %>
+  <%= form.submit 'Tweet', class: 'btn btn-warning mb-3' %>
 <% end %>

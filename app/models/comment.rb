@@ -21,7 +21,7 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class Comment < ApplicationRecord
-  belongs_to :tweet, counter_cache: :comments_count
+  belongs_to :tweet, counter_cache: true
   belongs_to :user, counter_cache: :comments_count
 
   belongs_to :parent, class_name: 'Comment', optional: true

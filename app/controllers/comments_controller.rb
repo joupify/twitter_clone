@@ -42,7 +42,6 @@ class CommentsController < ApplicationController
   end
 
 # app/controllers/comments_controller.rb
-# app/controllers/comments_controller.rb
 def create_reply
   @comment = Comment.find(params[:id])
   @reply = @comment.replies.create(comment_params)
