@@ -15,6 +15,7 @@
 #  reset_password_token   :string
 #  tweets_count           :integer
 #  username               :string
+#  verified               :boolean
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #

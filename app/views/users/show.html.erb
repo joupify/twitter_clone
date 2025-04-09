@@ -2,7 +2,10 @@
   <div class="card">
     <div class="card-body">
       <%= image_tag @user.avatar.variant(resize: "200x200").processed if @user.avatar.attached? %>
-      <h1 class="card-title"><%= @user.username %></h1>
+      <h1 class="card-title"><%= @user.username %>
+      <% if @user.verified? %>
+        <span class="verified-badge">✔️</span>
+      <% end %></h1>
       <p class="card-text">Email: <%= @user.email %></p>
 
       <div class="banner">

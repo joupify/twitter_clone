@@ -85,3 +85,7 @@ gem 'sidekiq', '~> 7.3'
 gem 'roo'       # Pour lire les fichiers Excel
 gem 'gruff'     # Pour générer les graphiques
 gem 'descriptive_statistics'
+
+gem 'dotenv-rails', groups: [:development, :test]
+
+gem 'stripe'

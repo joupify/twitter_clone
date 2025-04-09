@@ -44,4 +44,8 @@ Rails.application.routes.draw do
     resources :comments do
       post 'replies', to: 'comments#create_reply', as: 'create_reply'
     end
+
+  resources :verifications, only: [:new, :create]
+  get 'verification/success', to: 'verifications#success'
+
 end

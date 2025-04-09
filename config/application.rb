@@ -31,6 +31,10 @@ module Twitter
     config.middleware.use Warden::Manager do |manager|
       manager.default_strategies :database_authenticatable
     end
+    
+    if defined?(Dotenv)
+      Dotenv.load
+    end
 
     config.autoload_paths += %W[#{config.root}/config/initializers]
   end

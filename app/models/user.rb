@@ -15,6 +15,7 @@
 #  reset_password_token   :string
 #  tweets_count           :integer
 #  username               :string
+#  verified               :boolean
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
@@ -184,24 +185,26 @@ class User < ApplicationRecord
     end
   end
 
-  #   # Récupère tous les amis avec qui l'utilisateur a eu une conversation
-  #   def friends
-  #     # Récupère tous les expéditeurs des messages reçus par l'utilisateur
-  #     senders = Message.where(sender: self).map(&:receiver)
-  #     # Récupère tous les destinataires des messages envoyés par l'utilisateur
-  #     receivers = Message.where(receiver: self).map(&:sender)
-  #     # Retourne la liste des amis (expéditeurs + destinataires) sans doublons
-  #     (senders + receivers).uniq
-  #   end
+  def verified?
+    # Vérifie si l'utilisateur est vérifié
+    self.verified == true
+  end
 
-  # # Récupère la conversation avec un ami
-  # def conversation_with_friend(friend)
-  #   Message.where(
-  #     '(sender_id = :user_id AND receiver_id = :friend_id) OR (sender_id = :friend_id AND receiver_id = :user_id)',
-  #     user_id: self.id, friend_id: friend.id
-  #   ).order(:created_at)
-  # end
+  def profile_complete?
+    self.avatar.attached? && self.bio.present?
+  end
 
+  def account_ok?
+    created_at <= 7.days.ago && !sensitive_username?
+  end
+
+  def sensitive_username? 
+    # Vérifie si le nom d'utilisateur contient des mots sensibles
+    %w[elonmusk gouvernement macron admin twitter].include?(self.username.downcase)
+
+  end
+
+  
   private
 
   def set_default_username
