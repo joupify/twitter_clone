@@ -77,7 +77,7 @@ gem 'simple_form', '~> 5.2'
 gem 'autoprefixer-rails'
 gem 'bullet', '~> 8.0'
 gem 'noticed', '~> 2.6'
-gem 'sidekiq', '~> 7.3'
+gem 'sidekiq', '~> 8.0'
 
 
 
