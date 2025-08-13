@@ -103,6 +103,6 @@ Accéder à l’application : [http://localhost:3000](http://localhost:3000)
 
 ## 👩‍💻 Auteur
 
-**joupify**  
+*Malika (joupify)** 
 Développeuse Full Stack Ruby on Rails  
 [Portfolio GitHub](https://github.com/joupify)
